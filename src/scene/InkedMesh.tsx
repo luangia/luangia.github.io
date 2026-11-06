@@ -18,9 +18,12 @@ type InkedMeshProps = Omit<ThreeElements['group'], 'children'> & {
   rim?: number
   /** Shared 0–1 uniform that brightens the rim light. */
   rimBoost?: SharedFloat
+  /** Shared 0–1 uniform that turns the ink line into the keyboard focus ring. */
+  ring?: SharedFloat
 }
 
 const noRimBoost: SharedFloat = { value: 0 }
+const noRing: SharedFloat = { value: 0 }
 
 /** A mesh with toon shading and, by default, an inverted-hull ink outline. */
 export function InkedMesh({
@@ -30,13 +33,17 @@ export function InkedMesh({
   paint = 0.35,
   rim = 1,
   rimBoost = noRimBoost,
+  ring = noRing,
   ...groupProps
 }: InkedMeshProps) {
   const toon = useMemo(
-    () => createToonMaterial(color, paint, rim, rimBoost),
+    () => createToonMaterial({ color, paint, rim, rimBoost }),
     [color, paint, rim, rimBoost],
   )
-  const hull = useMemo(() => (outline > 0 ? createOutlineMaterial(outline) : null), [outline])
+  const hull = useMemo(
+    () => (outline > 0 ? createOutlineMaterial(outline, ring) : null),
+    [outline, ring],
+  )
   const hullGeometry = useMemo(
     () => (outline > 0 ? addOutlineNormals(geometry) : null),
     [geometry, outline],

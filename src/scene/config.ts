@@ -12,6 +12,10 @@ export const PALETTE = {
   ember: '#e8743b',
   wall: '#2b2a5c',
   wood: '#6b4553',
+  /** Laptop screen colors. */
+  screen: '#4a3fa8',
+  gold: '#efae2e',
+  verdigris: '#2fa883',
 } as const
 
 /**
@@ -40,8 +44,14 @@ export const CAMERA = {
   smoothTime: 0.25,
 }
 
+/**
+ * Gap under objects resting on a surface. Ink hulls extend below their mesh, so
+ * without it the surface hides the bottom of the outline.
+ */
+export const CONTACT_GAP = 0.03
+
 export const LAPTOP = {
-  position: new Vector3(0, 0, 0.2),
+  position: new Vector3(0, CONTACT_GAP, 0.2),
   /** How far it rises on hover, in world units. */
   hoverLift: 0.08,
   /** Damping time for hover changes, in seconds. */
@@ -52,6 +62,20 @@ export const LAPTOP = {
   lidHeight: 1.05,
   /** Backward tilt of the open lid, in radians. */
   lidTilt: -0.22,
+}
+
+export const DUST = {
+  count: 170,
+  min: new Vector3(-4.5, -0.2, -1.6),
+  size: new Vector3(9, 4.4, 5.4),
+  /** Rise speed range, in world units per second. */
+  minSpeed: 0.015,
+  maxSpeed: 0.06,
+  /** Mote diameter range, in world units. */
+  minScale: 0.012,
+  maxScale: 0.04,
+  /** A point in the window that the moon shaft passes through. */
+  shaftOrigin: new Vector3(0.3, 2, -1.75),
 }
 
 /**

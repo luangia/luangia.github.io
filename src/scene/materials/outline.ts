@@ -1,10 +1,12 @@
 import { BackSide, BufferAttribute, Color, ShaderMaterial, type BufferGeometry } from 'three'
 import { PALETTE } from '../config'
 import { noiseGlsl } from './noise.glsl'
+import type { SharedFloat } from './toon'
 
 const vertexShader = /* glsl */ `
   attribute vec3 aOutlineNormal;
   uniform float uThickness;
+  uniform float uRing;
 
   ${noiseGlsl}
 
@@ -13,30 +15,37 @@ const vertexShader = /* glsl */ `
     vec3 normal = normalize(mat3(modelMatrix) * aOutlineNormal);
 
     // Thickness drifts along the surface, so lines swell and taper like ink.
-    world.xyz += normal * uThickness * (0.45 + 1.1 * noise(world.xyz * 3.5));
+    float inked = uThickness * (0.45 + 1.1 * noise(world.xyz * 3.5));
+    world.xyz += normal * mix(inked, 0.03, uRing);
     gl_Position = projectionMatrix * viewMatrix * world;
   }
 `
 
 const fragmentShader = /* glsl */ `
   uniform vec3 uColor;
+  uniform vec3 uRingColor;
+  uniform float uRing;
 
   void main() {
-    gl_FragColor = vec4(uColor, 1.0);
+    gl_FragColor = vec4(mix(uColor, uRingColor, uRing), 1.0);
     #include <colorspace_fragment>
   }
 `
 
 const inkColor = new Color(PALETTE.ink)
+/** Above 1, so the keyboard focus ring also catches the bloom. */
+const ringColor = new Color(PALETTE.paleGold).multiplyScalar(1.5)
 
-export function createOutlineMaterial(thickness: number) {
+export function createOutlineMaterial(thickness: number, ring: SharedFloat) {
   return new ShaderMaterial({
     vertexShader,
     fragmentShader,
     side: BackSide,
     uniforms: {
       uColor: { value: inkColor },
+      uRingColor: { value: ringColor },
       uThickness: { value: thickness },
+      uRing: ring,
     },
   })
 }

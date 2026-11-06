@@ -1,8 +1,11 @@
 {
+  "title": "The Desk",
+  "sceneDescription": "A moonlit scholar's desk under an arched window, with a lit candle and an open laptop.",
   "objects": {
     "laptop": {
       "label": "Projects",
-      "panelTitle": "Projects"
+      "panelTitle": "Projects",
+      "openLabel": "Open projects on the laptop"
     }
   },
   "ui": {

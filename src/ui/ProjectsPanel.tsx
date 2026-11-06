@@ -1,13 +1,16 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { projects, site } from '../content'
 import { useDeskStore } from '../state/store'
 
 export function ProjectsPanel() {
   const open = useDeskStore((state) => state.focused === 'laptop')
   const returnToDesk = useDeskStore((state) => state.returnToDesk)
+  const back = useRef<HTMLButtonElement>(null)
 
   useEffect(() => {
     if (!open) return
+
+    back.current?.focus({ preventScroll: true })
 
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === 'Escape') returnToDesk()
@@ -27,7 +30,7 @@ export function ProjectsPanel() {
     >
       <header className="panel-header">
         <h2 id="projects-title">{site.objects.laptop.panelTitle}</h2>
-        <button className="panel-back" type="button" onClick={returnToDesk}>
+        <button className="panel-back" ref={back} type="button" onClick={returnToDesk}>
           {site.ui.back}
         </button>
       </header>

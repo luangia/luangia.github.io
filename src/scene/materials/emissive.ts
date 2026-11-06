@@ -1,10 +1,26 @@
-import { ShaderMaterial, Vector2 } from 'three'
+import { Color, ShaderMaterial, Vector2 } from 'three'
+import { PALETTE } from '../config'
 import { noiseGlsl } from './noise.glsl'
 
 /** Values above 1 in these shaders are what the bloom pass picks up. */
 
-export function createScreenMaterial() {
+export function createScreenMaterial(width: number, height: number) {
+  const lit = (color: string, brightness = 1) => ({
+    value: new Color(color).multiplyScalar(brightness),
+  })
+
   return new ShaderMaterial({
+    uniforms: {
+      uSize: { value: new Vector2(width, height) },
+      uDesktop: lit(PALETTE.screen),
+      uInk: lit(PALETTE.ink),
+      uSilver: lit(PALETTE.silver, 1.1),
+      uCream: lit(PALETTE.paleGold, 1.15),
+      uViolet: lit(PALETTE.violet, 1.6),
+      uEmber: lit(PALETTE.ember, 1.1),
+      uGreen: lit(PALETTE.verdigris, 1.1),
+      uGold: lit(PALETTE.gold, 1.1),
+    },
     vertexShader: /* glsl */ `
       varying vec2 vUv;
 
@@ -14,19 +30,47 @@ export function createScreenMaterial() {
       }
     `,
     fragmentShader: /* glsl */ `
+      uniform vec2 uSize;
+      uniform vec3 uDesktop;
+      uniform vec3 uInk;
+      uniform vec3 uSilver;
+      uniform vec3 uCream;
+      uniform vec3 uViolet;
+      uniform vec3 uEmber;
+      uniform vec3 uGreen;
+      uniform vec3 uGold;
+
       varying vec2 vUv;
 
-      void main() {
-        vec3 low = vec3(0.1, 0.1, 0.42);
-        vec3 high = vec3(0.62, 0.62, 1.25);
-        vec3 color = mix(low, high, smoothstep(0.0, 1.0, vUv.y));
+      float roundedBox(vec2 point, vec2 center, vec2 halfSize, float radius) {
+        vec2 edge = abs(point - center) - halfSize + radius;
+        return length(max(edge, 0.0)) + min(max(edge.x, edge.y), 0.0) - radius;
+      }
 
-        // Painted hint of a title bar and two project cards.
-        float bar = step(0.88, vUv.y);
-        float cards = step(0.1, vUv.x) * step(vUv.x, 0.9) *
-          (step(0.5, vUv.y) * step(vUv.y, 0.78) + step(0.14, vUv.y) * step(vUv.y, 0.42));
-        color = mix(color, vec3(1.08, 0.92, 0.58), bar);
-        color = mix(color, vec3(0.24, 0.2, 0.55), cards * 0.75);
+      float fill(float signedDistance) {
+        float width = fwidth(signedDistance);
+        return 1.0 - smoothstep(-width, width, signedDistance);
+      }
+
+      void drawWindow(inout vec3 color, vec2 point, vec2 center, vec2 halfSize, vec3 body, vec3 bar) {
+        const float BAR_HEIGHT = 0.075;
+        const float INK_WIDTH = 0.011;
+
+        float box = roundedBox(point, center, halfSize, 0.022);
+        vec3 surface = mix(body, bar, step(center.y + halfSize.y - BAR_HEIGHT, point.y));
+
+        color = mix(color, uInk, fill(box - INK_WIDTH));
+        color = mix(color, surface, fill(box));
+      }
+
+      void main() {
+        vec2 point = (vUv - 0.5) * uSize;
+        vec3 color = uDesktop;
+
+        // Back to front, so each window overlaps the one before it.
+        drawWindow(color, point, vec2(-0.29, 0.13), vec2(0.34, 0.25), uSilver, uEmber);
+        drawWindow(color, point, vec2(0.3, 0.17), vec2(0.3, 0.2), uViolet, uGreen);
+        drawWindow(color, point, vec2(0.05, -0.15), vec2(0.34, 0.22), uCream, uGold);
 
         gl_FragColor = vec4(color, 1.0);
         #include <colorspace_fragment>

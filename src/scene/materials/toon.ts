@@ -97,7 +97,14 @@ const fragmentShader = /* glsl */ `
 
 const shadowColor = new Color(PALETTE.indigo)
 
-export function createToonMaterial(color: string, paint: number, rim: number, rimBoost: SharedFloat) {
+type ToonOptions = {
+  color: string
+  paint: number
+  rim: number
+  rimBoost: SharedFloat
+}
+
+export function createToonMaterial({ color, paint, rim, rimBoost }: ToonOptions) {
   return new ShaderMaterial({
     vertexShader,
     fragmentShader,

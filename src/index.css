@@ -10,7 +10,9 @@
 
 html,
 body,
-#root {
+#root,
+.stage,
+.scene {
   height: 100%;
   margin: 0;
 }
@@ -20,6 +22,23 @@ body {
   color: var(--silver);
   font-family: var(--serif);
   overflow: hidden;
+}
+
+.visually-hidden {
+  border: 0;
+  clip-path: inset(50%);
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  padding: 0;
+  position: absolute;
+  white-space: nowrap;
+  width: 1px;
+}
+
+:focus-visible {
+  outline: 2px solid var(--pale-gold);
+  outline-offset: 2px;
 }
 
 /* Object label */
@@ -50,8 +69,8 @@ body {
 
 .panel {
   background: color-mix(in srgb, var(--ink) 94%, transparent);
-  border: 1px solid var(--pale-gold);
   bottom: 1.5rem;
+  border: 1px solid var(--violet);
   box-sizing: border-box;
   opacity: 0;
   overflow-y: auto;
@@ -160,4 +179,42 @@ body {
 
 .project-links a:hover {
   color: var(--ember);
+}
+
+/* Reduced motion: the camera cuts, so a quick fade softens each change. */
+
+@media (prefers-reduced-motion: reduce) {
+  .object-label {
+    animation: none;
+  }
+
+  .panel,
+  .panel[data-open='true'] {
+    transform: none;
+    transition: opacity 0.2s ease;
+  }
+
+  .panel {
+    visibility: visible;
+  }
+
+  .scene {
+    animation: scene-fade-a 0.3s ease-out;
+  }
+
+  .stage[data-focused='true'] .scene {
+    animation-name: scene-fade-b;
+  }
+}
+
+@keyframes scene-fade-a {
+  from {
+    opacity: 0.4;
+  }
+}
+
+@keyframes scene-fade-b {
+  from {
+    opacity: 0.4;
+  }
 }

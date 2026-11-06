@@ -2,6 +2,7 @@ import { useFrame } from '@react-three/fiber'
 import { easing } from 'maath'
 import { useMemo } from 'react'
 import { Vector3 } from 'three'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useDeskStore } from '../state/store'
 import { CAMERA, FOCUS_POSES, getRestPosition } from './config'
 
@@ -9,22 +10,31 @@ import { CAMERA, FOCUS_POSES, getRestPosition } from './config'
 export function CameraRig() {
   const goal = useMemo(() => new Vector3(), [])
   const look = useMemo(() => CAMERA.target.clone(), [])
+  const reducedMotion = useReducedMotion()
 
   useFrame(({ camera, pointer }, delta) => {
     const { focused } = useDeskStore.getState()
     const { azimuth, elevation, focusDrift } = CAMERA.parallax
+    const leanX = reducedMotion ? 0 : pointer.x
+    const leanY = reducedMotion ? 0 : pointer.y
+    const lookGoal = focused ? FOCUS_POSES[focused].target : CAMERA.target
 
     if (focused) {
-      const pose = FOCUS_POSES[focused]
-      goal.copy(pose.position)
-      goal.x += pointer.x * focusDrift
-      goal.y += pointer.y * focusDrift
+      goal.copy(FOCUS_POSES[focused].position)
+      goal.x += leanX * focusDrift
+      goal.y += leanY * focusDrift
     } else {
-      getRestPosition(pointer.x * azimuth, pointer.y * elevation, goal)
+      getRestPosition(leanX * azimuth, leanY * elevation, goal)
     }
 
-    easing.damp3(camera.position, goal, CAMERA.smoothTime, delta)
-    easing.damp3(look, focused ? FOCUS_POSES[focused].target : CAMERA.target, CAMERA.smoothTime, delta)
+    if (reducedMotion) {
+      camera.position.copy(goal)
+      look.copy(lookGoal)
+    } else {
+      easing.damp3(camera.position, goal, CAMERA.smoothTime, delta)
+      easing.damp3(look, lookGoal, CAMERA.smoothTime, delta)
+    }
+
     camera.lookAt(look)
   })
 

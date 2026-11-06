@@ -5,6 +5,7 @@ import { useEffect, useMemo, useRef, useState } from 'react'
 import { type Group } from 'three'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { site } from '../content'
+import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useDeskStore } from '../state/store'
 import { LAPTOP, PALETTE } from './config'
 import { InkedMesh } from './InkedMesh'
@@ -17,23 +18,35 @@ const baseGeometry = new RoundedBoxGeometry(width, baseHeight, depth, 3, 0.02)
 const deckGeometry = new RoundedBoxGeometry(width - 0.2, 0.01, depth - 0.45, 1, 0.004)
 const lidGeometry = new RoundedBoxGeometry(width, lidHeight, 0.04, 3, 0.018)
 
+const SCREEN_WIDTH = width - 0.14
+const SCREEN_HEIGHT = lidHeight - 0.13
+
 /** Placeholder model, shaded and inked like the final object will be. */
 export function Laptop() {
   const focused = useDeskStore((state) => state.focused)
   const focus = useDeskStore((state) => state.focus)
+  const returnToDesk = useDeskStore((state) => state.returnToDesk)
+  const keyboardFocused = useDeskStore((state) => state.keyboardTarget === 'laptop')
   const [hovered, setHovered] = useState(false)
-  const active = hovered && focused === null
+  const reducedMotion = useReducedMotion()
+  const active = (hovered || keyboardFocused) && focused === null
+  const showRing = keyboardFocused && focused === null
   const lifted = useRef<Group>(null!)
   const rimBoost = useMemo<SharedFloat>(() => ({ value: 0 }), [])
-  const screen = useMemo(createScreenMaterial, [])
+  const ring = useMemo<SharedFloat>(() => ({ value: 0 }), [])
+  const screen = useMemo(() => createScreenMaterial(SCREEN_WIDTH, SCREEN_HEIGHT), [])
 
   useEffect(() => () => screen.dispose(), [screen])
 
-  useCursor(active)
+  useCursor(hovered && focused === null)
 
   useFrame((_, delta) => {
-    easing.damp(lifted.current.position, 'y', active ? LAPTOP.hoverLift : 0, LAPTOP.hoverSmoothTime, delta)
-    easing.damp(rimBoost, 'value', active ? 1 : 0, LAPTOP.hoverSmoothTime, delta)
+    const { hoverLift, hoverSmoothTime } = LAPTOP
+    const smoothTime = reducedMotion ? 0 : hoverSmoothTime
+
+    easing.damp(lifted.current.position, 'y', active && !reducedMotion ? hoverLift : 0, smoothTime, delta)
+    easing.damp(rimBoost, 'value', active ? 1 : 0, smoothTime, delta)
+    easing.damp(ring, 'value', showRing ? 1 : 0, smoothTime, delta)
   })
 
   const handleOver = (event: ThreeEvent<PointerEvent>) => {
@@ -43,7 +56,10 @@ export function Laptop() {
 
   const handleClick = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation()
+
+    // Its hit area overhangs the model, so while open it counts as "outside".
     if (focused === null) focus('laptop')
+    else returnToDesk()
   }
 
   return (
@@ -65,6 +81,7 @@ export function Laptop() {
           geometry={baseGeometry}
           position={[0, baseHeight / 2, 0]}
           rimBoost={rimBoost}
+          ring={ring}
         />
         <InkedMesh
           color={PALETTE.indigo}
@@ -81,9 +98,10 @@ export function Laptop() {
             geometry={lidGeometry}
             position={[0, lidHeight / 2, 0]}
             rimBoost={rimBoost}
+            ring={ring}
           />
           <mesh material={screen} position={[0, lidHeight / 2, 0.021]}>
-            <planeGeometry args={[width - 0.14, lidHeight - 0.13]} />
+            <planeGeometry args={[SCREEN_WIDTH, SCREEN_HEIGHT]} />
           </mesh>
         </group>
 
