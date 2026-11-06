@@ -2,16 +2,30 @@ import { useFrame } from '@react-three/fiber'
 import { easing } from 'maath'
 import { useMemo } from 'react'
 import { Vector3 } from 'three'
-import { CAMERA, getRestPosition } from './config'
+import { useDeskStore } from '../state/store'
+import { CAMERA, FOCUS_POSES, getRestPosition } from './config'
 
-/** Holds the fixed seated view and orbits it a few degrees toward the pointer. */
+/** Holds the seated view, leans it toward the pointer, and eases to close-ups. */
 export function CameraRig() {
   const goal = useMemo(() => new Vector3(), [])
+  const look = useMemo(() => CAMERA.target.clone(), [])
 
   useFrame(({ camera, pointer }, delta) => {
-    getRestPosition(pointer.x * CAMERA.parallax.azimuth, pointer.y * CAMERA.parallax.elevation, goal)
-    easing.damp3(camera.position, goal, CAMERA.parallax.smoothTime, delta)
-    camera.lookAt(CAMERA.target)
+    const { focused } = useDeskStore.getState()
+    const { azimuth, elevation, focusDrift } = CAMERA.parallax
+
+    if (focused) {
+      const pose = FOCUS_POSES[focused]
+      goal.copy(pose.position)
+      goal.x += pointer.x * focusDrift
+      goal.y += pointer.y * focusDrift
+    } else {
+      getRestPosition(pointer.x * azimuth, pointer.y * elevation, goal)
+    }
+
+    easing.damp3(camera.position, goal, CAMERA.smoothTime, delta)
+    easing.damp3(look, focused ? FOCUS_POSES[focused].target : CAMERA.target, CAMERA.smoothTime, delta)
+    camera.lookAt(look)
   })
 
   return null

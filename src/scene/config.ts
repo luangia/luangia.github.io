@@ -1,4 +1,5 @@
 import { MathUtils, Vector3 } from 'three'
+import type { DeskObjectId } from '../state/store'
 
 /** Lunar palette from the PRD's visual pillars. */
 export const PALETTE = {
@@ -30,8 +31,35 @@ export const CAMERA = {
     /** Maximum orbit at the screen edges, in degrees. */
     azimuth: 2,
     elevation: 1.2,
-    /** Damping time in seconds; higher is lazier. */
-    smoothTime: 0.35,
+    /** Pointer drift during a close-up, in world units. */
+    focusDrift: 0.04,
+  },
+  /** Damping time for all camera moves, in seconds; higher is lazier. */
+  smoothTime: 0.25,
+}
+
+export const LAPTOP = {
+  position: new Vector3(0, 0, 0.2),
+  /** How far it rises on hover, in world units. */
+  hoverLift: 0.08,
+  /** Damping time for hover changes, in seconds. */
+  hoverSmoothTime: 0.12,
+  width: 1.6,
+  depth: 1.1,
+  baseHeight: 0.06,
+  lidHeight: 1.05,
+  /** Backward tilt of the open lid, in radians. */
+  lidTilt: -0.22,
+}
+
+/**
+ * Close-up camera poses. Each sits nearly in front of its object and turns right
+ * of it, leaving room for the panel without skewing the object.
+ */
+export const FOCUS_POSES: Record<DeskObjectId, { position: Vector3; target: Vector3 }> = {
+  laptop: {
+    position: new Vector3(0.15, 1, 3.3),
+    target: new Vector3(0.8, 0.5, 0.2),
   },
 }
 

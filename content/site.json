@@ -1,0 +1,15 @@
+{
+  "objects": {
+    "laptop": {
+      "label": "Projects",
+      "panelTitle": "Projects"
+    }
+  },
+  "ui": {
+    "back": "Back to desk",
+    "role": "Role",
+    "stack": "Stack",
+    "live": "Visit site",
+    "github": "GitHub"
+  }
+}

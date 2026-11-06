@@ -1,5 +1,6 @@
 import { CameraRig } from './CameraRig'
 import { PALETTE } from './config'
+import { Laptop } from './Laptop'
 
 /**
  * Step 1: a bare desk and wall so the camera angle and parallax have something
@@ -23,6 +24,8 @@ export function Scene() {
         <planeGeometry args={[40, 20]} />
         <meshStandardMaterial color={PALETTE.indigo} />
       </mesh>
+
+      <Laptop />
     </>
   )
 }

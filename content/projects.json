@@ -1,0 +1,26 @@
+[
+  {
+    "title": "Etymodendron",
+    "summary": "TODO",
+    "role": "TODO",
+    "stack": ["TODO"],
+    "links": {
+      "github": null,
+      "live": "https://etymodendron.pages.dev/"
+    },
+    "images": [],
+    "featured": true
+  },
+  {
+    "title": "Tone-to-emoji parser",
+    "summary": "TODO",
+    "role": "TODO",
+    "stack": ["TODO"],
+    "links": {
+      "github": null,
+      "live": "https://luangia.github.io/emoji-parser/"
+    },
+    "images": [],
+    "featured": true
+  }
+]

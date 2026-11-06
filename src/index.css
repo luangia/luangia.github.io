@@ -1,5 +1,11 @@
 :root {
   --ink: #0c0a1a;
+  --indigo: #1b1a3f;
+  --violet: #3a2a63;
+  --silver: #c9d1e3;
+  --pale-gold: #e6d39a;
+  --ember: #e8743b;
+  --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
 }
 
 html,
@@ -11,5 +17,147 @@ body,
 
 body {
   background: var(--ink);
+  color: var(--silver);
+  font-family: var(--serif);
   overflow: hidden;
+}
+
+/* Object label */
+
+.object-label-anchor {
+  pointer-events: none;
+}
+
+.object-label {
+  animation: label-in 0.15s ease-out;
+  background: var(--ink);
+  border: 1px solid var(--pale-gold);
+  color: var(--pale-gold);
+  font-size: 1rem;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0.75rem;
+  white-space: nowrap;
+}
+
+@keyframes label-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+}
+
+/* Panel */
+
+.panel {
+  background: color-mix(in srgb, var(--ink) 94%, transparent);
+  border: 1px solid var(--pale-gold);
+  bottom: 1.5rem;
+  box-sizing: border-box;
+  opacity: 0;
+  overflow-y: auto;
+  padding: 1.5rem;
+  position: fixed;
+  right: 1.5rem;
+  top: 1.5rem;
+  transform: translateX(2rem);
+  transition:
+    opacity 0.25s ease,
+    transform 0.25s ease,
+    visibility 0s linear 0.25s;
+  visibility: hidden;
+  width: min(26rem, calc(100vw - 3rem));
+}
+
+.panel[data-open='true'] {
+  opacity: 1;
+  transform: none;
+  transition:
+    opacity 0.35s ease 0.3s,
+    transform 0.35s ease 0.3s;
+  visibility: visible;
+}
+
+.panel-header {
+  align-items: baseline;
+  display: flex;
+  gap: 1rem;
+  justify-content: space-between;
+  margin-bottom: 1.25rem;
+}
+
+.panel h2 {
+  color: var(--pale-gold);
+  font-size: 1.75rem;
+  font-weight: 400;
+  margin: 0;
+}
+
+.panel-back {
+  background: none;
+  border: 1px solid var(--silver);
+  color: var(--silver);
+  cursor: pointer;
+  font: inherit;
+  font-size: 0.875rem;
+  padding: 0.25rem 0.75rem;
+}
+
+.panel-back:hover {
+  border-color: var(--pale-gold);
+  color: var(--pale-gold);
+}
+
+.project-list {
+  display: grid;
+  gap: 1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.project-card {
+  background: color-mix(in srgb, var(--indigo) 70%, transparent);
+  border: 1px solid var(--violet);
+  padding: 1rem;
+}
+
+.project-card h3 {
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin: 0 0 0.5rem;
+}
+
+.project-card p {
+  line-height: 1.5;
+  margin: 0 0 0.75rem;
+}
+
+.project-card dl {
+  column-gap: 0.75rem;
+  display: grid;
+  font-size: 0.9375rem;
+  grid-template-columns: auto 1fr;
+  margin: 0 0 0.75rem;
+  row-gap: 0.25rem;
+}
+
+.project-card dt {
+  opacity: 0.7;
+}
+
+.project-card dd {
+  margin: 0;
+}
+
+.project-links {
+  display: flex;
+  gap: 1rem;
+}
+
+.project-links a {
+  color: var(--pale-gold);
+}
+
+.project-links a:hover {
+  color: var(--ember);
 }
