@@ -17,6 +17,7 @@ export function App() {
           position: getRestPosition().toArray(),
         }}
         dpr={[1, 2]}
+        flat
         gl={{ antialias: true }}
         onPointerMissed={returnToDesk}
       >

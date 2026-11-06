@@ -10,6 +10,8 @@ export const PALETTE = {
   silver: '#c9d1e3',
   paleGold: '#e6d39a',
   ember: '#e8743b',
+  wall: '#2b2a5c',
+  wood: '#6b4553',
 } as const
 
 /**

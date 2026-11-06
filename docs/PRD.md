@@ -27,7 +27,7 @@ A single-page three.js portfolio where visitors explore a moonlit, hand-painted 
 
 There is no single official name. The most accurate description is **hand-painted, painterly illustration with bold ink linework and dramatic chiaroscuro, with strong Art Nouveau influence**. Art director Jen Zee's work is known for lush palettes and a blend of Art Nouveau and classical influences ([source](https://shapes.inc/fandom/hades-ii/author)). The first Hades shifted from painterly to a pen-and-ink look during preproduction ([MCV/Develop interview](https://mcvuk.com/business-news/behind-the-art-of-hades-we-value-artistic-integrity-and-excellence-in-artistic-craft-at-supergiant-however-were-first-and-foremost-a-game-design-lead-team/)), and Hades II evolves it toward lunar, nocturnal themes.
 
-People also call it "Supergiant style" or "graphic-novel / comic-book style." Backgrounds specifically are painted 2.5D isometric environments: hand-painted textures, deep shadows, glowing light sources, drifting mist. This site borrows that painted treatment but not the isometric angle: the desk is seen head-on from a seated viewpoint.
+People also call it "Supergiant style" or "graphic-novel / comic-book style." Backgrounds specifically are painted 2.5D isometric environments: hand-painted textures, deep shadows, glowing light sources, drifting mist.
 
 **Visual pillars for this site**
 
@@ -49,7 +49,7 @@ Use "inspired by" framing and make original assets. Do not reuse Supergiant's ar
 
 ## Scene concept & desk objects
 
-The scene is a night-time scholar's study: a wooden desk under an arched Art Nouveau window with a full moon outside. Camera sits directly in front of the desk at seated eye level, as if the visitor is sitting at it and looking across everything on it. Each object below is a clickable hotspot that opens one section.
+The scene is a night-time scholar's study: a wooden desk under an arched Art Nouveau window with a full moon outside. Camera sits directly in front of the desk. Each object below is a clickable hotspot that opens one section.
 
 | Object | Section | What opens | Priority |
 | --- | --- | --- | --- |
@@ -63,6 +63,7 @@ The scene is a night-time scholar's study: a wooden desk under an arched Art Nou
 | Gramophone or lyre | Ambient sound | Toggles ambient music and room tone (off by default) | v1 |
 | Moon in the window | Easter egg | Click cycles moon phases; hidden note on the full moon | v2 |
 | Small companion (cat, owl or familiar) | Easter egg / guide | Idle animation; optional tooltips that suggest what to click | v2 |
+| Small potted plant (trailing leaves) | Decoration (love of plants) | Nothing. Not clickable; leaves sway gently on hover or with idle motion | v2 |
 
 **Section styling idea:** present projects and books as ornate collectible cards with Art Nouveau frames and tiers (e.g. "featured" cards get a gold frame). Keep the frames original rather than copying the game's boon cards.
 
@@ -73,7 +74,7 @@ The core loop is hover, click, zoom, read, return. Every step must also work wit
 **Main flow**
 
 1. **Load:** themed loading screen (ink drawing itself, moon filling up) with real progress; target under 3 s on broadband.
-2. **Intro:** camera starts close to the moonlit window and eases back into the seated view; one line of text: name + "click anything on the desk."
+2. **Intro:** camera drifts in from the window to the desk; one line of text: name + "click anything on the desk."
 3. **Hover:** object gets a brighter rim light, slight lift, and a hand-lettered label tag.
 4. **Click:** camera eases to a close-up of that object (about 0.8 s), rest of the scene dims and blurs.
 5. **Read:** an HTML panel with an Art Nouveau frame slides in beside the object; content is scrollable, selectable text.
@@ -105,7 +106,7 @@ The Hades look is mostly 2D painting, so a fully 3D scene will not match it by d
 | Fresnel rim light in shader | Moonlit silhouette edges | Doubles as the hover highlight |
 | Bloom (selective) | Glow on candle, screen, moon, embers | Only emissive objects, to keep shadows deep |
 | Particles (instanced sprites) | Dust motes, embers, mist | Painted sprite textures, slow drift |
-| Fixed first-person perspective camera (about 40° FOV) | Seated at the desk, facing it head-on, tilted slightly down with the near edge out of frame | Limit movement to a few degrees on mouse move (parallax), like a slight head turn |
+| Fixed orthographic or narrow-FOV camera | Isometric 3/4 feel, diorama look | Limit orbit to a few degrees on mouse move (parallax) |
 | Paper-grain overlay + vignette | Unify 2D and 3D layers | A full-screen shader pass, low opacity |
 | Depth-of-field on focus | Close-up shots when an object opens | Disable on low-end devices |
 
@@ -190,7 +191,7 @@ Build Phase 0 of my personal portfolio: a three.js scene (React Three Fiber + dr
 
 Art direction: hand-painted, painterly illustration inspired by Supergiant Games (Hades II): bold dark ink outlines, stepped toon shading with indigo-tinted shadows, dramatic chiaroscuro, cool moonlight rim light, warm candle glow, Art Nouveau ornamental UI frames, palette of indigo, violet, moss green, silver and pale gold with ember-orange accents. All assets original.
 
-Scene: a night-time scholar's desk under an arched window with a full moon, fixed first-person camera seated at the desk and facing it head-on, with slight mouse parallax. For Phase 0, build only the laptop as a clickable object: hover = brighter rim light + lift + label; click = camera eases to close-up and an HTML panel opens listing projects from content/projects.json; Esc returns.
+Scene: a night-time scholar's desk under an arched window with a full moon, fixed 3/4 isometric camera with slight mouse parallax. For Phase 0, build only the laptop as a clickable object: hover = brighter rim light + lift + label; click = camera eases to close-up and an HTML panel opens listing projects from content/projects.json; Esc returns.
 
 Seed content/projects.json with my two featured projects:
 - Etymodendron: https://etymodendron.pages.dev/

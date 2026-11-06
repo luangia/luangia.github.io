@@ -2,40 +2,38 @@ import { Html, useCursor } from '@react-three/drei'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import { easing } from 'maath'
 import { useEffect, useMemo, useRef, useState } from 'react'
-import { MeshStandardMaterial, type Group } from 'three'
+import { type Group } from 'three'
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { site } from '../content'
 import { useDeskStore } from '../state/store'
 import { LAPTOP, PALETTE } from './config'
+import { InkedMesh } from './InkedMesh'
+import { createScreenMaterial } from './materials/emissive'
+import type { SharedFloat } from './materials/toon'
 
 const { width, depth, baseHeight, lidHeight, lidTilt } = LAPTOP
 
-/**
- * Placeholder laptop. Geometry and materials are temporary. The hover glow
- * stands in for the rim light that the toon shader takes over in step 3.
- */
+const baseGeometry = new RoundedBoxGeometry(width, baseHeight, depth, 3, 0.02)
+const deckGeometry = new RoundedBoxGeometry(width - 0.2, 0.01, depth - 0.45, 1, 0.004)
+const lidGeometry = new RoundedBoxGeometry(width, lidHeight, 0.04, 3, 0.018)
+
+/** Placeholder model, shaded and inked like the final object will be. */
 export function Laptop() {
   const focused = useDeskStore((state) => state.focused)
   const focus = useDeskStore((state) => state.focus)
   const [hovered, setHovered] = useState(false)
   const active = hovered && focused === null
   const lifted = useRef<Group>(null!)
+  const rimBoost = useMemo<SharedFloat>(() => ({ value: 0 }), [])
+  const screen = useMemo(createScreenMaterial, [])
 
-  const shell = useMemo(
-    () =>
-      new MeshStandardMaterial({
-        color: PALETTE.silver,
-        emissive: PALETTE.silver,
-        emissiveIntensity: 0,
-      }),
-    [],
-  )
-  useEffect(() => () => shell.dispose(), [shell])
+  useEffect(() => () => screen.dispose(), [screen])
 
   useCursor(active)
 
   useFrame((_, delta) => {
     easing.damp(lifted.current.position, 'y', active ? LAPTOP.hoverLift : 0, LAPTOP.hoverSmoothTime, delta)
-    easing.damp(shell, 'emissiveIntensity', active ? 0.35 : 0, LAPTOP.hoverSmoothTime, delta)
+    easing.damp(rimBoost, 'value', active ? 1 : 0, LAPTOP.hoverSmoothTime, delta)
   })
 
   const handleOver = (event: ThreeEvent<PointerEvent>) => {
@@ -62,25 +60,30 @@ export function Laptop() {
       </mesh>
 
       <group ref={lifted}>
-        {/* Base */}
-        <mesh material={shell} position={[0, baseHeight / 2, 0]}>
-          <boxGeometry args={[width, baseHeight, depth]} />
-        </mesh>
-
-        {/* Keyboard deck */}
-        <mesh position={[0, baseHeight + 0.002, -0.08]}>
-          <boxGeometry args={[width - 0.2, 0.004, depth - 0.45]} />
-          <meshStandardMaterial color={PALETTE.indigo} />
-        </mesh>
+        <InkedMesh
+          color={PALETTE.silver}
+          geometry={baseGeometry}
+          position={[0, baseHeight / 2, 0]}
+          rimBoost={rimBoost}
+        />
+        <InkedMesh
+          color={PALETTE.indigo}
+          geometry={deckGeometry}
+          outline={0.006}
+          position={[0, baseHeight + 0.002, -0.08]}
+          rim={0}
+        />
 
         {/* Lid, hinged at the back edge of the base */}
         <group position={[0, baseHeight, -depth / 2]} rotation={[lidTilt, 0, 0]}>
-          <mesh material={shell} position={[0, lidHeight / 2, 0]}>
-            <boxGeometry args={[width, lidHeight, 0.04]} />
-          </mesh>
-          <mesh position={[0, lidHeight / 2, 0.021]}>
+          <InkedMesh
+            color={PALETTE.silver}
+            geometry={lidGeometry}
+            position={[0, lidHeight / 2, 0]}
+            rimBoost={rimBoost}
+          />
+          <mesh material={screen} position={[0, lidHeight / 2, 0.021]}>
             <planeGeometry args={[width - 0.14, lidHeight - 0.13]} />
-            <meshBasicMaterial color={PALETTE.paleGold} />
           </mesh>
         </group>
 
