@@ -30,6 +30,7 @@ const fragmentShader = /* glsl */ `
   uniform float uPaint;
   uniform float uRim;
   uniform float uFlat;
+  uniform float uSoft;
   uniform float uRimBoost;
   uniform vec3 uScreenPos;
   uniform vec3 uScreenColor;
@@ -82,8 +83,10 @@ const fragmentShader = /* glsl */ `
     float key = screen + fill;
     vec3 warmth = (uScreenColor * screen + uFillColor * fill) / max(key, 0.001);
 
-    float midBand = band(key + rough, 0.2);
-    float litBand = band(key + rough, 0.52);
+    // Soft shading swaps the hard tone steps for a gradient the dither fades
+    // through, so a round surface has no hard-edged oval of light.
+    float midBand = mix(band(key + rough, 0.2), smoothstep(0.0, 0.7, key), uSoft);
+    float litBand = band(key + rough, 0.52) * (1.0 - uSoft);
 
     // uShade is a filter: the share of light the shading ink lets through.
     vec3 shadow = base * uShade;
@@ -131,12 +134,14 @@ type ToonOptions = {
   rim: number
   /** Skip light and shade, printing the base color as is. */
   flat?: boolean
+  /** Shade with a soft gradient instead of hard steps; on round shapes hard steps read as a pale oval. */
+  soft?: boolean
   rimBoost: SharedFloat
   /** Index into TEXT_REGIONS. */
   region: number
 }
 
-export function createToonMaterial({ color, patch, paint, rim, flat = false, rimBoost, region }: ToonOptions) {
+export function createToonMaterial({ color, patch, paint, rim, flat = false, soft = false, rimBoost, region }: ToonOptions) {
   return new ShaderMaterial({
     vertexShader,
     fragmentShader,
@@ -150,6 +155,7 @@ export function createToonMaterial({ color, patch, paint, rim, flat = false, rim
       uPaint: { value: paint },
       uRim: { value: rim },
       uFlat: { value: flat ? 1 : 0 },
+      uSoft: { value: soft ? 1 : 0 },
       uRegion: { value: region },
       uRegionPass: regionPass,
       uRimBoost: rimBoost,

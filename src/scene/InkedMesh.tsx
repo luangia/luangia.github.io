@@ -21,6 +21,8 @@ type InkedMeshProps = Omit<ThreeElements['group'], 'children'> & {
   rim?: number
   /** Skip light and shade, for backdrop surfaces. */
   flat?: boolean
+  /** Shade with a soft gradient instead of hard steps; on round shapes hard steps read as a pale oval. */
+  soft?: boolean
   /** Shared 0–1 uniform that brightens the rim light. */
   rimBoost?: SharedFloat
   /** Shared 0–1 uniform that turns the ink line into the keyboard focus ring. */
@@ -42,14 +44,15 @@ export function InkedMesh({
   paint = 0.35,
   rim = 1,
   flat = false,
+  soft = false,
   rimBoost = noRimBoost,
   ring = noRing,
   ...groupProps
 }: InkedMeshProps) {
   const region = useContext(TextRegionContext)
   const toon = useMemo(
-    () => createToonMaterial({ color, patch, paint, rim, flat, rimBoost, region }),
-    [color, patch, paint, rim, flat, rimBoost, region],
+    () => createToonMaterial({ color, patch, paint, rim, flat, soft, rimBoost, region }),
+    [color, patch, paint, rim, flat, soft, rimBoost, region],
   )
   const hull = useMemo(
     () => (outline > 0 ? createOutlineMaterial(outline, ring, region) : null),

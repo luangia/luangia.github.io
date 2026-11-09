@@ -7,7 +7,9 @@ const RADIUS = 0.44
 const CENTER_Y = 0.66
 const TILT = 0.41
 
-const baseGeometry = new CylinderGeometry(0.27, 0.32, 0.06, 32)
+// Brass stand. A wide pale base sat right under the fill light and printed as
+// a bare-paper oval on the desk, so it is gold ink and sized to the globe.
+const baseGeometry = new CylinderGeometry(0.19, 0.23, 0.06, 32)
 const postGeometry = new CylinderGeometry(0.035, 0.05, CENTER_Y - RADIUS, 12)
 const globeGeometry = new SphereGeometry(RADIUS, 40, 28)
 const meridianGeometry = new TorusGeometry(RADIUS + 0.055, 0.016, 8, 64, Math.PI * 1.2)
@@ -21,11 +23,18 @@ export function Globe() {
     >
       {({ rimBoost, ring }) => (
         <>
-          <InkedMesh color={PALETTE.paleGold} geometry={baseGeometry} position={[0, 0.03, 0]} rimBoost={rimBoost} ring={ring} />
-          <InkedMesh color={PALETTE.paleGold} geometry={postGeometry} position={[0, 0.06 + (CENTER_Y - RADIUS) / 2, 0]} outline={0.008} />
+          <InkedMesh color={PALETTE.gold} geometry={baseGeometry} position={[0, 0.03, 0]} rimBoost={rimBoost} ring={ring} />
+          <InkedMesh color={PALETTE.gold} geometry={postGeometry} position={[0, 0.06 + (CENTER_Y - RADIUS) / 2, 0]} outline={0.008} />
 
           <group position={[0, CENTER_Y, 0]} rotation={[0, 0, TILT]}>
-            <InkedMesh color={PALETTE.ocean} geometry={globeGeometry} patch={PALETTE.land} rimBoost={rimBoost} ring={ring} />
+            <InkedMesh
+              color={PALETTE.ocean}
+              geometry={globeGeometry}
+              soft
+              patch={PALETTE.land}
+              rimBoost={rimBoost}
+              ring={ring}
+            />
             <InkedMesh
               color={PALETTE.paleGold}
               geometry={meridianGeometry}
