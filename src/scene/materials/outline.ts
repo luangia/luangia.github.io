@@ -1,5 +1,5 @@
 import { BackSide, BufferAttribute, Color, ShaderMaterial, type BufferGeometry } from 'three'
-import { PALETTE } from '../config'
+import { KEY_LINE, RISO } from '../config'
 import { noiseGlsl } from './noise.glsl'
 import type { SharedFloat } from './toon'
 
@@ -32,9 +32,9 @@ const fragmentShader = /* glsl */ `
   }
 `
 
-const inkColor = new Color(PALETTE.ink)
-/** Above 1, so the keyboard focus ring also catches the bloom. */
-const ringColor = new Color(PALETTE.paleGold).multiplyScalar(1.5)
+const inkColor = new Color(KEY_LINE)
+/** Printed in the highlight ink, like the hover. */
+const ringColor = new Color(RISO.pink)
 
 export function createOutlineMaterial(thickness: number, ring: SharedFloat) {
   return new ShaderMaterial({

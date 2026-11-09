@@ -1,11 +1,14 @@
+/* Risograph inks on cream paper, matching RISO in src/scene/config.ts. */
+
 :root {
-  --ink: #0c0a1a;
-  --indigo: #1b1a3f;
-  --violet: #3a2a63;
-  --silver: #c9d1e3;
-  --pale-gold: #e6d39a;
-  --ember: #e8743b;
+  --paper: #f3ecdc;
+  --blue: #0078bf;
+  --pink: #ff48b0;
+  --yellow: #ffe800;
+  /* Blue overprinted with pink: dark enough for body text. */
+  --ink: #23306e;
   --serif: 'Iowan Old Style', 'Palatino Linotype', Palatino, Georgia, serif;
+  --mono: 'Courier New', Courier, ui-monospace, monospace;
 }
 
 html,
@@ -18,8 +21,8 @@ body,
 }
 
 body {
-  background: var(--ink);
-  color: var(--silver);
+  background: var(--paper);
+  color: var(--ink);
   font-family: var(--serif);
   overflow: hidden;
 }
@@ -37,8 +40,17 @@ body {
 }
 
 :focus-visible {
-  outline: 2px solid var(--pale-gold);
+  outline: 2px solid var(--pink);
   outline-offset: 2px;
+}
+
+/* Headings print twice, the pink pass slightly off register. */
+.panel h2,
+.simple h1,
+.simple-section h2 {
+  color: var(--blue);
+  font-weight: 400;
+  text-shadow: 2px 1px 0 color-mix(in srgb, var(--pink) 75%, transparent);
 }
 
 /* Object label */
@@ -49,12 +61,16 @@ body {
 
 .object-label {
   animation: label-in 0.15s ease-out;
-  background: var(--ink);
-  border: 1px solid var(--pale-gold);
-  color: var(--pale-gold);
-  font-size: 1rem;
+  background: var(--paper);
+  border: 1.5px solid var(--blue);
+  box-shadow: 2px 2px 0 var(--pink);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  font-weight: 700;
   letter-spacing: 0.04em;
-  padding: 0.25rem 0.75rem;
+  padding: 0.2rem 0.6rem;
+  text-transform: uppercase;
   white-space: nowrap;
 }
 
@@ -68,9 +84,10 @@ body {
 /* Panel */
 
 .panel {
-  background: color-mix(in srgb, var(--ink) 94%, transparent);
+  background: var(--paper);
+  border: 1.5px solid var(--blue);
   bottom: 1.5rem;
-  border: 1px solid var(--violet);
+  box-shadow: 4px 4px 0 color-mix(in srgb, var(--pink) 80%, transparent);
   box-sizing: border-box;
   opacity: 0;
   overflow-y: auto;
@@ -105,28 +122,29 @@ body {
 }
 
 .panel h2 {
-  color: var(--pale-gold);
   font-size: 1.75rem;
-  font-weight: 400;
   margin: 0;
 }
 
 .panel-back {
-  background: none;
-  border: 1px solid var(--silver);
-  color: var(--silver);
+  background: var(--paper);
+  border: 1.5px solid var(--blue);
+  color: var(--ink);
   cursor: pointer;
-  font: inherit;
-  font-size: 0.875rem;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
   padding: 0.25rem 0.75rem;
+  text-transform: uppercase;
 }
 
 .panel-back:hover {
-  border-color: var(--pale-gold);
-  color: var(--pale-gold);
+  background: color-mix(in srgb, var(--yellow) 45%, var(--paper));
 }
 
-.project-list {
+/* Cards and section content */
+
+.card-list {
   display: grid;
   gap: 1rem;
   list-style: none;
@@ -134,24 +152,42 @@ body {
   padding: 0;
 }
 
-.project-card {
-  background: color-mix(in srgb, var(--indigo) 70%, transparent);
-  border: 1px solid var(--violet);
+.card {
+  background: color-mix(in srgb, var(--yellow) 14%, var(--paper));
+  border: 1px solid var(--blue);
   padding: 1rem;
 }
 
-.project-card h3 {
+.card h3,
+.card h4 {
+  color: var(--blue);
   font-size: 1.25rem;
   font-weight: 400;
   margin: 0 0 0.5rem;
 }
 
-.project-card p {
+.card p {
   line-height: 1.5;
   margin: 0 0 0.75rem;
 }
 
-.project-card dl {
+.card p:last-child {
+  margin-bottom: 0;
+}
+
+.card .byline {
+  margin-top: -0.25rem;
+  opacity: 0.75;
+}
+
+.card blockquote {
+  border-left: 2px solid var(--pink);
+  font-style: italic;
+  margin: 0 0 0.75rem;
+  padding-left: 0.75rem;
+}
+
+dl {
   column-gap: 0.75rem;
   display: grid;
   font-size: 0.9375rem;
@@ -160,25 +196,261 @@ body {
   row-gap: 0.25rem;
 }
 
-.project-card dt {
-  opacity: 0.7;
+dl:last-child {
+  margin-bottom: 0;
 }
 
-.project-card dd {
+dt {
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  opacity: 0.75;
+  text-transform: uppercase;
+}
+
+dd {
   margin: 0;
 }
 
-.project-links {
+.contact-row {
+  display: contents;
+}
+
+.card-links {
   display: flex;
   gap: 1rem;
+  margin-bottom: 0.75rem;
 }
 
-.project-links a {
-  color: var(--pale-gold);
+.card .card-links:last-child {
+  margin-bottom: 0;
 }
 
-.project-links a:hover {
-  color: var(--ember);
+a {
+  color: var(--blue);
+  text-decoration-color: var(--pink);
+  text-decoration-thickness: 2px;
+  text-underline-offset: 3px;
+}
+
+a:hover {
+  color: var(--ink);
+}
+
+.subsection {
+  margin-top: 1.5rem;
+}
+
+.subsection h3 {
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  margin: 0 0 0.75rem;
+  text-transform: uppercase;
+}
+
+.avatar {
+  border: 1px solid var(--blue);
+  display: block;
+  height: 8rem;
+  margin-bottom: 1rem;
+  width: 8rem;
+}
+
+/* Nav: a strip of paper laid over the print. */
+
+.nav {
+  background: var(--paper);
+  border: 1.5px solid var(--blue);
+  box-shadow: 3px 3px 0 color-mix(in srgb, var(--pink) 80%, transparent);
+  left: 1.25rem;
+  padding: 0.2rem 0.85rem;
+  position: fixed;
+  top: 1rem;
+  z-index: 1;
+}
+
+.nav ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.1rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav a {
+  color: var(--ink);
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  padding: 0.25rem 0;
+  text-decoration: none;
+  text-transform: uppercase;
+}
+
+.nav a[aria-current='page'] {
+  color: var(--blue);
+  text-decoration: underline;
+  text-decoration-color: var(--pink);
+}
+
+/* Touch screens keep :hover after a tap, which would leave links lit. */
+@media (hover: hover) {
+  .nav a:hover {
+    color: var(--blue);
+  }
+}
+
+.nav-simple a {
+  font-weight: 400;
+}
+
+/* Colophon: credits for the passages the print is typeset in. */
+
+.colophon {
+  background: var(--paper);
+  border: 1px solid var(--blue);
+  bottom: 1rem;
+  font-family: var(--mono);
+  font-size: 0.6875rem;
+  left: 1.25rem;
+  margin: 0;
+  max-width: min(34rem, calc(100vw - 2.5rem));
+  padding: 0.3rem 0.6rem;
+  position: fixed;
+}
+
+.colophon a {
+  text-decoration-thickness: 1px;
+}
+
+/* Loading and simple view */
+
+.loading {
+  align-items: center;
+  color: var(--blue);
+  display: flex;
+  font-family: var(--mono);
+  height: 100%;
+  justify-content: center;
+  margin: 0;
+  text-transform: uppercase;
+}
+
+.simple {
+  box-sizing: border-box;
+  height: 100%;
+  overflow-y: auto;
+  padding: 3rem max(1.5rem, calc(50vw - 21rem));
+  scroll-behavior: smooth;
+}
+
+.simple h1 {
+  font-size: 2.5rem;
+  margin: 0 0 0.5rem;
+}
+
+.simple-header ul {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem 1.25rem;
+  list-style: none;
+  margin: 1rem 0 0;
+  padding: 0;
+}
+
+.simple-header nav a {
+  font-family: var(--mono);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+.simple-section {
+  border-top: 1.5px solid var(--blue);
+  margin-top: 2.5rem;
+  padding-top: 2rem;
+}
+
+.simple-section h2 {
+  font-size: 1.75rem;
+  margin: 0 0 1rem;
+}
+
+.simple-section > h3 {
+  font-size: 1.25rem;
+  font-weight: 400;
+  margin: 0 0 0.5rem;
+}
+
+.simple-footer {
+  border-top: 1.5px solid var(--blue);
+  font-family: var(--mono);
+  font-size: 0.8125rem;
+  margin-top: 2.5rem;
+  padding-top: 1.5rem;
+}
+
+/* Phones and narrow windows: the panel becomes a bottom sheet. */
+
+@media (max-width: 720px), (max-aspect-ratio: 9/10) {
+  .nav {
+    border-width: 0 0 1.5px;
+    box-shadow: none;
+    left: 0;
+    padding: 0.25rem 0.75rem;
+    right: 0;
+    top: 0;
+  }
+
+  .nav ul {
+    flex-wrap: nowrap;
+    gap: 0.9rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+  }
+
+  .nav li {
+    flex: none;
+  }
+
+  .nav a {
+    align-items: center;
+    display: flex;
+    min-height: 44px;
+  }
+
+  .panel {
+    border-width: 1.5px 0 0;
+    bottom: 0;
+    box-shadow: none;
+    left: 0;
+    right: 0;
+    top: 46%;
+    transform: translateY(2rem);
+    width: auto;
+  }
+
+  .panel-back {
+    min-height: 44px;
+  }
+
+  .card-links a {
+    align-items: center;
+    display: inline-flex;
+    min-height: 44px;
+  }
+
+  .colophon {
+    left: 50%;
+    max-width: calc(100vw - 2rem);
+    text-align: center;
+    transform: translateX(-50%);
+    width: max-content;
+  }
 }
 
 /* Reduced motion: the camera cuts, so a quick fade softens each change. */

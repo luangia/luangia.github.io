@@ -4,7 +4,12 @@ import { Candle } from './Candle'
 import { Desk } from './Desk'
 import { Dust } from './Dust'
 import { Effects } from './Effects'
-import { Laptop } from './Laptop'
+import { Books } from './objects/Books'
+import { Globe } from './objects/Globe'
+import { Laptop } from './objects/Laptop'
+import { Letter } from './objects/Letter'
+import { Portrait } from './objects/Portrait'
+import { Scroll } from './objects/Scroll'
 
 export function Scene() {
   return (
@@ -13,7 +18,12 @@ export function Scene() {
       <Backdrop />
       <Desk />
       <Candle />
+      <Portrait />
       <Laptop />
+      <Books />
+      <Globe />
+      <Scroll />
+      <Letter />
       <Dust />
       <Effects />
     </>

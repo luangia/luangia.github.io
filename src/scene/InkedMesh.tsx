@@ -7,6 +7,8 @@ import { createToonMaterial, type SharedFloat } from './materials/toon'
 type InkedMeshProps = Omit<ThreeElements['group'], 'children'> & {
   geometry: BufferGeometry
   color: string
+  /** Second color, painted in irregular patches. */
+  patch?: string
   /** Ink line width in world units; 0 leaves the mesh unlined. */
   outline?: number
   /** Strength of the painted brush-stroke tint. */
@@ -16,6 +18,8 @@ type InkedMeshProps = Omit<ThreeElements['group'], 'children'> & {
    * light when seen at a grazing angle.
    */
   rim?: number
+  /** Skip light and shade, for backdrop surfaces. */
+  flat?: boolean
   /** Shared 0–1 uniform that brightens the rim light. */
   rimBoost?: SharedFloat
   /** Shared 0–1 uniform that turns the ink line into the keyboard focus ring. */
@@ -29,16 +33,18 @@ const noRing: SharedFloat = { value: 0 }
 export function InkedMesh({
   geometry,
   color,
+  patch,
   outline = 0.012,
   paint = 0.35,
   rim = 1,
+  flat = false,
   rimBoost = noRimBoost,
   ring = noRing,
   ...groupProps
 }: InkedMeshProps) {
   const toon = useMemo(
-    () => createToonMaterial({ color, paint, rim, rimBoost }),
-    [color, paint, rim, rimBoost],
+    () => createToonMaterial({ color, patch, paint, rim, flat, rimBoost }),
+    [color, patch, paint, rim, flat, rimBoost],
   )
   const hull = useMemo(
     () => (outline > 0 ? createOutlineMaterial(outline, ring) : null),

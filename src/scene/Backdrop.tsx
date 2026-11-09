@@ -88,6 +88,7 @@ export function Backdrop() {
         geometry={wallGeometry}
         outline={0}
         paint={0.7}
+        flat
         position={[0, 0, WALL_Z]}
         rim={0}
       />

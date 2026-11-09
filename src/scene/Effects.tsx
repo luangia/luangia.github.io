@@ -1,33 +1,32 @@
 import { useFrame } from '@react-three/fiber'
-import { Bloom, EffectComposer } from '@react-three/postprocessing'
+import { EffectComposer } from '@react-three/postprocessing'
 import { easing } from 'maath'
 import { useEffect, useMemo } from 'react'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { useDeskStore } from '../state/store'
-import { CAMERA } from './config'
-import { PaperEffect } from './materials/paper'
+import { CAMERA, usesBottomSheet } from './config'
+import { RisoEffect } from './print/RisoEffect'
 
-/**
- * Bloom is selective by brightness: toon surfaces stay below 1, while the moon,
- * screen and flame render above it, so only they glow.
- */
+/** The whole look lives in one print pass, so every object gets it. */
 export function Effects() {
-  const paper = useMemo(() => new PaperEffect(), [])
+  const riso = useMemo(() => new RisoEffect(), [])
   const reducedMotion = useReducedMotion()
 
-  useEffect(() => () => paper.dispose(), [paper])
+  useEffect(() => () => riso.dispose(), [riso])
 
-  useFrame((_, delta) => {
+  useFrame(({ gl, size }, delta) => {
     const goal = useDeskStore.getState().focused ? 1 : 0
+    riso.setPixelRatio(gl.getPixelRatio())
+    riso.setFocusLayout(usesBottomSheet(size.width, size.height))
 
-    if (reducedMotion) paper.dim.value = goal
-    else easing.damp(paper.dim, 'value', goal, CAMERA.smoothTime, delta)
+    if (reducedMotion) riso.dim.value = goal
+    else easing.damp(riso.dim, 'value', goal, CAMERA.smoothTime, delta)
   })
 
+  // No MSAA: a print needs no smoothing, and it keeps key lines pure black.
   return (
-    <EffectComposer multisampling={4}>
-      <Bloom intensity={0.75} luminanceSmoothing={0.2} luminanceThreshold={1} mipmapBlur radius={0.7} />
-      <primitive dispose={null} object={paper} />
+    <EffectComposer multisampling={0}>
+      <primitive dispose={null} object={riso} />
     </EffectComposer>
   )
 }

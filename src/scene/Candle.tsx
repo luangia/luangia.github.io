@@ -4,14 +4,11 @@ import { CylinderGeometry, type Mesh } from 'three'
 import { useReducedMotion } from '../hooks/useReducedMotion'
 import { CONTACT_GAP, PALETTE } from './config'
 import { InkedMesh } from './InkedMesh'
-import { lighting } from './materials/lighting'
 
 const dishGeometry = new CylinderGeometry(0.26, 0.3, 0.05, 28)
 const waxGeometry = new CylinderGeometry(0.095, 0.11, 0.56, 20)
 
-const BASE_INTENSITY = lighting.uCandleIntensity.value
-
-/** Scenery, not a hotspot: the visible source of the warm light. */
+/** Scenery, not a hotspot. Its flame prints as bare paper. */
 export function Candle() {
   const flame = useRef<Mesh>(null!)
   const reducedMotion = useReducedMotion()
@@ -22,7 +19,6 @@ export function Candle() {
       ? 0
       : Math.sin(time * 9.1) * 0.5 + Math.sin(time * 14.3 + 1.2) * 0.3 + Math.sin(time * 3.7) * 0.2
 
-    lighting.uCandleIntensity.value = BASE_INTENSITY * (1 + flicker * 0.05)
     flame.current.scale.set(0.055, 0.15 * (1 + flicker * 0.1), 0.055)
   })
 

@@ -1,19 +1,16 @@
-import { AdditiveBlending, ShaderMaterial } from 'three'
+import { ShaderMaterial } from 'three'
 import { DUST } from '../config'
 import { lighting } from './lighting'
 
 /** Motes drift in the vertex shader, so moving them costs no JavaScript per frame. */
 export function createDustMaterial() {
   return new ShaderMaterial({
-    blending: AdditiveBlending,
     depthWrite: false,
     transparent: true,
     uniforms: {
       uTime: { value: 0 },
       uMin: { value: DUST.min },
       uSize: { value: DUST.size },
-      uCandlePos: lighting.uCandlePos,
-      uCandleColor: lighting.uCandleColor,
       uMoonColor: lighting.uMoonColor,
       uMoonDir: lighting.uMoonDir,
       uShaftOrigin: { value: DUST.shaftOrigin },
@@ -25,14 +22,12 @@ export function createDustMaterial() {
       uniform float uTime;
       uniform vec3 uMin;
       uniform vec3 uSize;
-      uniform vec3 uCandlePos;
-      uniform vec3 uCandleColor;
       uniform vec3 uMoonColor;
       uniform vec3 uMoonDir;
       uniform vec3 uShaftOrigin;
 
       varying vec2 vUv;
-      varying vec3 vColor;
+      varying float vStrength;
 
       void main() {
         vec3 point = aOrigin;
@@ -41,9 +36,7 @@ export function createDustMaterial() {
         point.x += sin(uTime * 0.21 + aSeed.x) * 0.3;
         point.z += cos(uTime * 0.17 + aSeed.x * 1.7) * 0.25;
 
-        // Motes only show where light catches them: the candle or the moon shaft.
-        vec3 fromCandle = point - uCandlePos;
-        float candle = 1.0 / (1.0 + 1.4 * dot(fromCandle, fromCandle));
+        // Motes show most where the moon shaft catches them.
 
         vec3 fromWindow = point - uShaftOrigin;
         vec3 offAxis = fromWindow - uMoonDir * dot(fromWindow, uMoonDir);
@@ -51,7 +44,7 @@ export function createDustMaterial() {
 
         // Fades at both ends of the rise, hiding the wrap back to the bottom.
         float ends = smoothstep(0.0, 0.4, rise) * smoothstep(uSize.y, uSize.y - 0.4, rise);
-        vColor = (uCandleColor * candle + uMoonColor * (0.07 + 0.3 * shaft)) * ends;
+        vStrength = clamp(0.15 + 0.6 * shaft, 0.0, 1.0) * ends;
 
         vUv = uv;
         vec4 view = viewMatrix * vec4(point, 1.0);
@@ -61,11 +54,12 @@ export function createDustMaterial() {
     `,
     fragmentShader: /* glsl */ `
       varying vec2 vUv;
-      varying vec3 vColor;
+      varying float vStrength;
 
+      // Motes print as ink specks where the light catches them.
       void main() {
-        float disc = smoothstep(0.5, 0.12, distance(vUv, vec2(0.5)));
-        gl_FragColor = vec4(vColor * disc, disc);
+        float disc = smoothstep(0.5, 0.3, distance(vUv, vec2(0.5)));
+        gl_FragColor = vec4(vec3(0.02, 0.02, 0.06), disc * vStrength);
         #include <colorspace_fragment>
       }
     `,

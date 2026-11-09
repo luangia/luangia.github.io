@@ -1,0 +1,33 @@
+{
+  "streakDays": null,
+  "languages": [
+    {
+      "name": "Vietnamese",
+      "level": "Native",
+      "started": null,
+      "focus": null,
+      "wordOfTheDay": []
+    },
+    {
+      "name": "English",
+      "level": "B.A. in English",
+      "started": null,
+      "focus": null,
+      "wordOfTheDay": []
+    },
+    {
+      "name": "French",
+      "level": "Moderate",
+      "started": null,
+      "focus": null,
+      "wordOfTheDay": []
+    },
+    {
+      "name": "Spanish",
+      "level": "Beginner, learning",
+      "started": null,
+      "focus": "Understands native content when it isn't spoken too fast",
+      "wordOfTheDay": []
+    }
+  ]
+}

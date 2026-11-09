@@ -1,39 +1,20 @@
-import { Canvas } from '@react-three/fiber'
+import { lazy, Suspense } from 'react'
 import { site } from './content'
-import { Scene } from './scene/Scene'
-import { CAMERA, PALETTE, getRestPosition } from './scene/config'
 import { useDeskStore } from './state/store'
-import { DeskControls } from './ui/DeskControls'
-import { ProjectsPanel } from './ui/ProjectsPanel'
+import { SimpleView } from './ui/SimpleView'
+import { canRenderDesk } from './webgl'
+
+const DeskView = lazy(() => import('./DeskView'))
+const canShowDesk = canRenderDesk()
 
 export function App() {
-  const focused = useDeskStore((state) => state.focused)
-  const returnToDesk = useDeskStore((state) => state.returnToDesk)
+  const simple = useDeskStore((state) => state.simple)
+
+  if (simple || !canShowDesk) return <SimpleView canShowDesk={canShowDesk} />
 
   return (
-    <main className="stage" data-focused={focused !== null}>
-      <h1 className="visually-hidden">{site.title}</h1>
-
-      <div aria-label={site.sceneDescription} className="scene" role="img">
-        <Canvas
-          camera={{
-            fov: CAMERA.fov,
-            near: CAMERA.near,
-            far: CAMERA.far,
-            position: getRestPosition().toArray(),
-          }}
-          dpr={[1, 2]}
-          flat
-          gl={{ antialias: false }}
-          onPointerMissed={returnToDesk}
-        >
-          <color attach="background" args={[PALETTE.ink]} />
-          <Scene />
-        </Canvas>
-      </div>
-
-      <DeskControls />
-      <ProjectsPanel />
-    </main>
+    <Suspense fallback={<p className="loading">{site.ui.loading}</p>}>
+      <DeskView />
+    </Suspense>
   )
 }

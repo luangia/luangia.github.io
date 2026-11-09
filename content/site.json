@@ -1,18 +1,70 @@
 {
   "title": "The Desk",
-  "sceneDescription": "A moonlit scholar's desk under an arched window, with a lit candle and an open laptop.",
-  "objects": {
-    "laptop": {
+  "sceneDescription": "A moonlit scholar's desk under an arched window. On it are a framed portrait, a laptop, a stack of books with one lying open, a globe, a rolled scroll, a sealed letter with a quill and inkwell, and a lit candle.",
+  "sections": {
+    "about": {
+      "label": "About",
+      "title": "About me",
+      "openLabel": "Open About, the framed portrait"
+    },
+    "projects": {
       "label": "Projects",
-      "panelTitle": "Projects",
-      "openLabel": "Open projects on the laptop"
+      "title": "Projects",
+      "openLabel": "Open Projects, the laptop"
+    },
+    "reading": {
+      "label": "Reading",
+      "title": "Reading",
+      "openLabel": "Open Reading, the books"
+    },
+    "languages": {
+      "label": "Languages",
+      "title": "Languages",
+      "openLabel": "Open Languages, the globe"
+    },
+    "resume": {
+      "label": "Resume",
+      "title": "Resume",
+      "openLabel": "Open Resume, the scroll"
+    },
+    "contact": {
+      "label": "Contact",
+      "title": "Contact",
+      "openLabel": "Open Contact, the sealed letter"
     }
   },
   "ui": {
     "back": "Back to desk",
+    "navLabel": "Sections",
+    "simpleView": "Simple view",
+    "fullView": "Back to the desk",
+    "loading": "Lighting the candle",
     "role": "Role",
     "stack": "Stack",
     "live": "Visit site",
-    "github": "GitHub"
+    "github": "GitHub",
+    "values": "Values",
+    "funFacts": "Fun facts",
+    "shelf": {
+      "reading": "Currently reading",
+      "read": "Read",
+      "want": "Want to read"
+    },
+    "rating": "Rating",
+    "writing": "Writing",
+    "read": "Read it",
+    "level": "Level",
+    "started": "Started",
+    "focus": "Current focus",
+    "streak": "Study streak",
+    "days": "days",
+    "wordOfTheDay": "Word of the day",
+    "experience": "Experience",
+    "education": "Education",
+    "downloadResume": "Download PDF",
+    "email": "Email",
+    "linkedin": "LinkedIn",
+    "noContact": "Contact details are coming soon.",
+    "colophon": "Typeset in passages from"
   }
 }
