@@ -124,15 +124,15 @@ export const LAPTOP = {
 }
 
 export const DUST = {
-  count: 170,
+  count: 50,
   min: new Vector3(-4.5, -0.2, -1.6),
   size: new Vector3(9, 4.4, 5.4),
   /** Rise speed range, in world units per second. */
   minSpeed: 0.015,
   maxSpeed: 0.06,
   /** Mote diameter range, in world units. */
-  minScale: 0.01,
-  maxScale: 0.03,
+  minScale: 0.03,
+  maxScale: 0.075,
   /** A point in the window that the moon shaft passes through. */
   shaftOrigin: new Vector3(0.3, 2, -1.75),
 }

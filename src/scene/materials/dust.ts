@@ -44,7 +44,7 @@ export function createDustMaterial() {
 
         // Fades at both ends of the rise, hiding the wrap back to the bottom.
         float ends = smoothstep(0.0, 0.4, rise) * smoothstep(uSize.y, uSize.y - 0.4, rise);
-        vStrength = clamp(0.15 + 0.6 * shaft, 0.0, 1.0) * ends;
+        vStrength = clamp(0.85 + 0.15 * shaft, 0.0, 1.0) * ends;
 
         vUv = uv;
         vec4 view = viewMatrix * vec4(point, 1.0);
@@ -56,9 +56,10 @@ export function createDustMaterial() {
       varying vec2 vUv;
       varying float vStrength;
 
-      // Motes print as ink specks where the light catches them.
+      // Motes print as solid ink specks. A half-strength mote only separates
+      // into partial ink, which the dither breaks into scattered dots.
       void main() {
-        float disc = smoothstep(0.5, 0.3, distance(vUv, vec2(0.5)));
+        float disc = smoothstep(0.5, 0.4, distance(vUv, vec2(0.5)));
         gl_FragColor = vec4(vec3(0.02, 0.02, 0.06), disc * vStrength);
         #include <colorspace_fragment>
       }
