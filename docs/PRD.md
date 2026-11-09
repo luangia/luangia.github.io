@@ -27,7 +27,7 @@ A single-page three.js portfolio where visitors explore a moonlit writing desk, 
 
 The whole scene should look like a **risograph print**: a few flat spot inks laid down one layer at a time on uncoated paper, with every tone made from dots, slightly misaligned layers, and the grain of the paper showing through. Risograph is a stencil duplicator popular with zine makers and print studios. Each ink is its own drum and pass, so a print has 2–3 colors that overlap into new mixes (blue over pink reads as purple), and the layers never line up perfectly.
 
-The signature twist: **the shading is made of text from classic books**. One ink layer is set entirely in passages from public-domain books. Where the scene is light, the type thins out and becomes readable; where it is dark, the type packs in and becomes texture. The rest of the tone is ordinary dot dithering. If book text doesn't read well at small sizes, the fallback is an ASCII ramp, where characters are picked only for how dark they print. Book text is the default because it says "reader" before anyone clicks anything.
+The signature twist: **the shading is made of text from classic books**. One ink layer is set entirely in passages from public-domain books. Where the scene is light, the type thins out and becomes readable; where it is dark, the type packs in and becomes texture. The rest of the tone is ordinary dot dithering. Book text was chosen over ASCII art because it says "reader" before anyone clicks anything.
 
 Earlier phases were built in a Hades II–inspired painted style. The scene, camera and interactions carry over; only the look changes.
 
@@ -37,12 +37,12 @@ Earlier phases were built in a Hades II–inspired painted style. The scene, cam
 | --- | --- |
 | Spot inks | 2–3 risograph inks, overprinted on paper. No other colors: any mix comes from layers overlapping |
 | Dithered tone | Every gradient is dots: ordered (Bayer) or blue-noise dithering, with a cell large enough to see (about 2–3 CSS px) |
-| Type as texture | One ink layer is set in passages from classic books. Tone controls how densely the glyphs print; the lightest areas are readable |
+| Type as texture | One ink layer is set in passages from classic books, each desk object in its own book. Tone controls how densely the glyphs print; the lightest areas are readable |
 | Misregistration | Each ink layer is offset by 1–3 px and slightly rotated, so edges and colors don't quite line up |
 | Paper | Off-white uncoated stock with visible grain and fibres, uneven ink coverage, and faint ink specks |
-| Light as bare paper | The moon, candle flame and laptop screen are unprinted paper. No bloom, and no candle light: the flame is decoration only |
+| Light as bare paper | The moon and laptop screen are unprinted paper. No bloom |
 | Key line | Crisp outlines from the existing ink hulls, printed in blue at full resolution, so objects stay defined under the type |
-| Light backdrop | The wall and sky print in light ink and skip shading, so the wall reads as a page of thin type and the shaded, outlined objects in front stand out |
+| Light backdrop | The wall is bare paper and the sky prints in light ink, both unshaded, so the shaded, outlined objects in front stand out on their own |
 | Living atmosphere | Dust motes as ink specks drifting through the light |
 
 **Prompt keywords** (for image generators or design tools)
@@ -63,13 +63,13 @@ The scene is a night-time scholar's study: a wooden desk under an arched window 
 | Framed portrait or hand mirror | About me | Short bio, photo or illustrated avatar, values, fun facts | MVP |
 | Rolled scroll / parchment | Resume | Unrolls into a one-page resume; PDF download button | MVP |
 | Quill, inkwell + sealed letter | Contact | Wax-sealed envelope opens to email, LinkedIn, GitHub, contact form | MVP |
-| Candle or oil lamp | Theme toggle | Blow out / relight: swaps the ink set (for example, a warmer pair of inks) | v1 |
+| Candle or oil lamp | Theme toggle | Removed from the scene on Nov 9, 2026. If the ink-set toggle comes back, it needs a new object | v1 |
 | Gramophone or lyre | Ambient sound | Toggles ambient music and room tone (off by default) | v1 |
 | Moon in the window | Easter egg | Click cycles moon phases; hidden note on the full moon | v2 |
 | Small companion (cat, owl or familiar) | Easter egg / guide | Idle animation; optional tooltips that suggest what to click | v2 |
 | Small potted plant (trailing leaves) | Decoration (love of plants) | Nothing. Not clickable; leaves sway gently on hover or with idle motion | v2 |
 
-**Section styling idea:** panels look like printed paper: off-white stock, text in one riso ink, plain cards, no ornamental frames. Headings can be misregistered across two inks; body text is always crisp and never dithered, so it stays readable.
+**Section styling idea:** panels look like printed paper: off-white stock, text in one riso ink, all set in Courier Prime, plain cards, no ornamental frames. Headings are bold and misregistered across two inks; body text is always crisp and never dithered, so it stays readable.
 
 ## Interaction & UX
 
@@ -107,14 +107,14 @@ Keep the 3D scene, lighting and camera, and change how the result is printed. Sc
 | Stepped tone shading (existing toon shader) | Gives the dither clean tone shapes to work with | Shade is added blue ink, not darkening, so shadows stay clean instead of muddy |
 | Ink recipes and separation | Scene colors are defined as ink amounts; the print pass separates them back out | Separation treats inks as filters that multiply over the paper. Light sources render brighter than paper, so they print as bare paper |
 | Ordered or blue-noise dithering | Turns coverage into dots | Screen-space, fixed to the page like a real print; cell size scales with device pixel ratio |
-| Text halftone layer | Sets the blue ink in passages from classic books | Glyph atlas built on a canvas at load; each grid cell takes the next glyph in reading order; tone, read per pixel, decides how heavily it prints, so letters are cut cleanly at object edges. ASCII ramp as fallback |
+| Text halftone layer | Sets the blue ink in passages from classic books, a different book per object | A region pass renders each object as an ID, and each object's passage is laid out from the top left of its on-screen box, so lines read on from row to row. Tone, read per pixel, decides how heavily a glyph prints, so letters are cut cleanly at object edges. The desk, window and sky share the room's passages |
 | Misregistration and overprint | Riso layering | Per-ink offset and slight rotation; inks multiply over the paper |
 | Paper texture | The stock | Static grain, fibres, uneven coverage and specks; never animated |
 | Key line (existing inverted hull) | Object definition | Outlines render pure black, which no ink recipe produces; the pass prints them as crisp blue lines. Needs anti-aliasing off |
 | Particles (instanced sprites) | Dust motes | Rendered as ink specks |
 | Fixed first-person perspective camera (about 40° FOV) | Seated at the desk, facing it head-on, tilted slightly down with the near edge out of frame | Limit movement to a few degrees on mouse move (parallax), like a slight head turn |
 
-Dropped from the painted version: bloom, candle light, painted brush-stroke tinting, vignette, anti-aliasing and depth-of-field.
+Dropped from the painted version: bloom, the candle, painted brush-stroke tinting, vignette, anti-aliasing and depth-of-field.
 
 ## Tech stack, content & requirements
 
@@ -125,7 +125,7 @@ Dropped from the painted version: bloom, candle light, painted brush-stroke tint
 | Framework | Vite + React (or Next.js if you want SSR for the simple view) | Fast dev, easy deploy |
 | 3D | three.js via React Three Fiber + drei | Declarative scene, `Html`, `useGLTF`, hover helpers |
 | Post-processing | pmndrs `postprocessing` / `@react-three/postprocessing` | One custom riso effect: dithering, text layer, misregistration, paper |
-| Type | A book serif or monospace web font, self-hosted | Feeds the glyph atlas for the text layer, and the UI |
+| Type | Courier Prime for everything: headings (bold, blue with the pink off-register pass), body text, nav, labels and the passages printed in the scene | One typewriter face reads as a typed and printed zine and matches the type layer. Self-hosted via Fontsource so every visitor gets the same face; the desk waits for it before baking the glyph atlas |
 | Animation | GSAP or `maath` easing | Camera moves, panel transitions |
 | State | Zustand | Which object is focused, theme, sound |
 | Assets | Blender → glTF, Draco/Meshopt geometry, KTX2 textures | Small downloads |
@@ -138,7 +138,7 @@ Dropped from the painted version: bloom, candle light, painted brush-stroke tint
 - `books`: title, author, status (reading / read / want), rating, short note, favorite quote (short)
 - `languages`: name, level (e.g. CEFR A1–C2), started, current focus, word of the day\[\]
 - `about`, `resume.pdf`, `contact`: single entries
-- `passages`: title, author, year, source link, text. Public domain only; feeds the text layer and a credits line
+- `passages`: object (which desk object it prints on, or `room`), title, author, year, source link, text. Public domain only; feeds the text layer and a credits line
 
 **Non-functional requirements**
 
@@ -183,10 +183,10 @@ Dropped from the painted version: bloom, candle light, painted brush-stroke tint
 - [x] Is the text layer what I meant by "classic books quotes/paragraphs in it": the shading itself made of book passages?
   - [x] Yes
 - [x] Book text or ASCII ramp for the text layer?
-  - [x] Book text. ASCII ramp only as a fallback if shapes don't read at small sizes
+  - [x] Book text. An ASCII-art version was tried (Nov 9, 2026) and dropped
 - [ ] Which ink set? Using for now: Blue, Fluorescent Pink and Yellow on natural (cream) paper. Alternatives: Federal Blue + Fluorescent Orange; Teal + Fluorescent Pink
 - [ ] Which passages? Preference: classic literature and essays, in the spirit of Jane Austen, *The Great Gatsby*, David Foster Wallace and George Orwell
-  - In use now (content/passages.json): the opening of *Pride and Prejudice*, the close of *The Great Gatsby*, the "luminous halo" passage from Woolf's "Modern Fiction", and Twain's first four rules from "Fenimore Cooper's Literary Offences"
+  - In use now (content/passages.json): Wilde's preface to *Dorian Gray* on the portrait, Babbage on the Analytical Engine on the laptop, the opening of *Pride and Prejudice* on the books, Verne's *Around the World in Eighty Days* on the globe, Franklin's *Autobiography* on the scroll, Chesterfield's *Letters to His Son* on the letter, and Fitzgerald, Woolf and Twain across the desk, window and sky
   - Usable everywhere: Jane Austen; *The Great Gatsby* (1925)
   - Not usable: David Foster Wallace (copyrighted everywhere); George Orwell's essays (public domain in the UK and EU, but published 1931 or later, so still under US copyright until 2032–2042)
   - Public-domain essayists in a similar spirit: Virginia Woolf (*A Room of One's Own*, *The Common Reader*), Mark Twain's critical essays, G. K. Chesterton (pre-1931), Oscar Wilde, William Hazlitt, Montaigne (Cotton or Florio translation)
@@ -214,7 +214,7 @@ Paste this into a coding assistant after the PRD and CLAUDE.md are in the repo. 
 ```markdown
 Build Phase 0 of my personal portfolio: a three.js scene (React Three Fiber + drei + @react-three/postprocessing, Vite, TypeScript). Follow docs/PRD.md.
 
-Art direction: risograph print. 2–3 spot inks overprinted on cream paper, all tone made from ordered or blue-noise dithering, one ink layer set in passages from public-domain classic books (ASCII ramp as fallback), misregistered layers, paper grain, light sources left as bare paper, UI panels as plain printed paper. All assets original.
+Art direction: risograph print. 2–3 spot inks overprinted on cream paper, all tone made from ordered or blue-noise dithering, one ink layer set in passages from public-domain classic books, misregistered layers, paper grain, light sources left as bare paper, UI panels as plain printed paper. All assets original.
 
 Scene: a night-time scholar's desk under an arched window with a full moon, fixed first-person camera seated at the desk and facing it head-on, with slight mouse parallax. For Phase 0, build only the laptop as a clickable object: hover = reprint in a highlight ink + lift + label; click = camera eases to close-up and an HTML panel opens listing projects from content/projects.json; Esc returns.
 

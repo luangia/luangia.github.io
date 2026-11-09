@@ -1,5 +1,22 @@
 [
   {
+    "object": "about",
+    "title": "The Picture of Dorian Gray",
+    "author": "Oscar Wilde",
+    "year": 1891,
+    "source": "https://www.gutenberg.org/ebooks/174",
+    "text": "The artist is the creator of beautiful things. To reveal art and conceal the artist is art’s aim. The critic is he who can translate into another manner or a new material his impression of beautiful things.\n\nThe highest as the lowest form of criticism is a mode of autobiography. Those who find ugly meanings in beautiful things are corrupt without being charming. This is a fault.\n\nThose who find beautiful meanings in beautiful things are the cultivated. For these there is hope. They are the elect to whom beautiful things mean only beauty.\n\nThere is no such thing as a moral or an immoral book. Books are well written, or badly written. That is all.\n\nThe nineteenth century dislike of realism is the rage of Caliban seeing his own face in a glass.\n\nThe nineteenth century dislike of romanticism is the rage of Caliban not seeing his own face in a glass. The moral life of man forms part of the subject-matter of the artist, but the morality of art consists in the perfect use of an imperfect medium. No artist desires to prove anything. Even things that are true can be proved. No artist has ethical sympathies. An ethical sympathy in an artist is an unpardonable mannerism of style. No artist is ever morbid. The artist can express everything. Thought and language are to the artist instruments of an art. Vice and virtue are to the artist materials for an art. From the point of view of form, the type of all the arts is the art of the musician. From the point of view of feeling, the actor’s craft is the type. All art is at once surface and symbol. Those who go beneath the surface do so at their peril. Those who read the symbol do so at their peril. It is the spectator, and not life, that art really mirrors. Diversity of opinion about a work of art shows that the work is new, complex, and vital. When critics disagree, the artist is in accord with himself. We can forgive a man for making a useful thing as long as he does not admire it. The only excuse for making a useless thing is that one admires it intensely.\n\nAll art is quite useless."
+  },
+  {
+    "object": "projects",
+    "title": "Passages from the Life of a Philosopher",
+    "author": "Charles Babbage",
+    "year": 1864,
+    "source": "https://www.gutenberg.org/ebooks/57532",
+    "text": "As soon as an Analytical Engine exists, it will necessarily guide the future course of the science. Whenever any result is sought by its aid, the question will then arise—By what course of calculation can these results be arrived at by the machine in the shortest time?\n\nIn the drawings I have prepared I proposed to have a thousand variables, upon each of which any number not having more than fifty figures can be placed. This machine would multiply 50 figures by other 50, and print the product of 100 figures. Or it would divide any number having 100 figures by any other of 50 figures, and print the quotient of 50 figures. Allowing but a moderate velocity for the machine, the time occupied by either of these operations would be about one minute."
+  },
+  {
+    "object": "reading",
     "title": "Pride and Prejudice",
     "author": "Jane Austen",
     "year": 1813,
@@ -7,6 +24,31 @@
     "text": "It is a truth universally acknowledged, that a single man in possession of a good fortune must be in want of a wife.\n\nHowever little known the feelings or views of such a man may be on his first entering a neighbourhood, this truth is so well fixed in the minds of the surrounding families, that he is considered as the rightful property of some one or other of their daughters.\n\n“My dear Mr. Bennet,” said his lady to him one day, “have you heard that Netherfield Park is let at last?”\n\nMr. Bennet replied that he had not."
   },
   {
+    "object": "languages",
+    "title": "Around the World in Eighty Days, translated by George M. Towle",
+    "author": "Jules Verne",
+    "year": 1873,
+    "source": "https://www.gutenberg.org/ebooks/103",
+    "text": "Mr. Phileas Fogg lived, in 1872, at No. 7, Saville Row, Burlington Gardens, the house in which Sheridan died in 1814. He was one of the most noticeable members of the Reform Club, though he seemed always to avoid attracting attention; an enigmatical personage, about whom little was known, except that he was a polished man of the world. People said that he resembled Byron—at least that his head was Byronic; but he was a bearded, tranquil Byron, who might live on a thousand years without growing old."
+  },
+  {
+    "object": "resume",
+    "title": "The Autobiography of Benjamin Franklin",
+    "author": "Benjamin Franklin",
+    "year": 1791,
+    "source": "https://www.gutenberg.org/ebooks/148",
+    "text": "Dear Son: I have ever had pleasure in obtaining any little anecdotes of my ancestors. You may remember the inquiries I made among the remains of my relations when you were with me in England, and the journey I undertook for that purpose. Imagining it may be equally agreeable to you to know the circumstances of my life, many of which you are yet unacquainted with, and expecting the enjoyment of a week's uninterrupted leisure in my present country retirement, I sit down to write them for you. To which I have besides some other inducements. Having emerged from the poverty and obscurity in which I was born and bred, to a state of affluence and some degree of reputation in the world, and having gone so far through life with a considerable share of felicity, the conducing means I made use of, which with the blessing of God so well succeeded, my posterity may like to know, as they may find some of them suitable to their own situations, and therefore fit to be imitated."
+  },
+  {
+    "object": "contact",
+    "title": "Letters to His Son",
+    "author": "Lord Chesterfield",
+    "year": 1774,
+    "source": "https://www.gutenberg.org/ebooks/3361",
+    "text": "If care and application are necessary to the acquiring of those qualifications, without which you can never be considerable, nor make a figure in the world, they are not less necessary with regard to the lesser accomplishments, which are requisite to make you agreeable and pleasing in society. In truth, whatever is worth doing at all, is worth doing well; and nothing can be done well without attention: I therefore carry the necessity of attention down to the lowest things, even to dancing and dress. Custom has made dancing sometimes necessary for a young man; therefore mind it while you learn it that you may learn to do it well, and not be ridiculous, though in a ridiculous act. Dress is of the same nature; you must dress; therefore attend to it; not in order to rival or to excel a fop in it, but in order to avoid singularity, and consequently ridicule. Take great care always to be dressed like the reasonable people of your own age, in the place where you are; whose dress is never spoken of one way or another, as either too negligent or too much studied."
+  },
+  {
+    "object": "room",
     "title": "The Great Gatsby",
     "author": "F. Scott Fitzgerald",
     "year": 1925,
@@ -14,6 +56,7 @@
     "text": "And as I sat there brooding on the old, unknown world, I thought of Gatsby’s wonder when he first picked out the green light at the end of Daisy’s dock. He had come a long way to this blue lawn, and his dream must have seemed so close that he could hardly fail to grasp it. He did not know that it was already behind him, somewhere back in that vast obscurity beyond the city, where the dark fields of the republic rolled on under the night.\n\nGatsby believed in the green light, the orgiastic future that year by year recedes before us. It eluded us then, but that’s no matter—tomorrow we will run faster, stretch out our arms further … And one fine morning—\n\nSo we beat on, boats against the current, borne back ceaselessly into the past."
   },
   {
+    "object": "room",
     "title": "Modern Fiction, in The Common Reader",
     "author": "Virginia Woolf",
     "year": 1925,
@@ -21,6 +64,7 @@
     "text": "Examine for a moment an ordinary mind on an ordinary day. The mind receives a myriad impressions—trivial, fantastic, evanescent, or engraved with the sharpness of steel. From all sides they come, an incessant shower of innumerable atoms; and as they fall, as they shape themselves into the life of Monday or Tuesday, the accent falls differently from of old; the moment of importance came not here but there; so that if a writer were a free man and not a slave, if he could write what he chose, not what he must, if he could base his work upon his own feeling and not upon convention, there would be no plot, no comedy, no tragedy, no love interest or catastrophe in the accepted style, and perhaps not a single button sewn on as the Bond Street tailors would have it. Life is not a series of gig lamps symmetrically arranged; but a luminous halo, a semi-transparent envelope surrounding us from the beginning of consciousness to the end. Is it not the task of the novelist to convey this varying, this unknown and uncircumscribed spirit, whatever aberration or complexity it may display, with as little mixture of the alien and external as possible? We are not pleading merely for courage and sincerity; we are suggesting that the proper stuff of fiction is a little other than custom would have us believe it."
   },
   {
+    "object": "room",
     "title": "Fenimore Cooper's Literary Offences",
     "author": "Mark Twain",
     "year": 1895,

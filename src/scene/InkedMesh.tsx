@@ -1,8 +1,9 @@
 import type { ThreeElements } from '@react-three/fiber'
-import { useEffect, useMemo } from 'react'
-import type { BufferGeometry } from 'three'
+import { useContext, useEffect, useMemo } from 'react'
+import type { BufferGeometry, Object3D } from 'three'
 import { addOutlineNormals, createOutlineMaterial } from './materials/outline'
 import { createToonMaterial, type SharedFloat } from './materials/toon'
+import { TEXT_REGION_LAYER, TextRegionContext } from './print/regions'
 
 type InkedMeshProps = Omit<ThreeElements['group'], 'children'> & {
   geometry: BufferGeometry
@@ -29,6 +30,9 @@ type InkedMeshProps = Omit<ThreeElements['group'], 'children'> & {
 const noRimBoost: SharedFloat = { value: 0 }
 const noRing: SharedFloat = { value: 0 }
 
+/** Also draws the mesh in the region pass, which decides each area's passage. */
+const joinRegionPass = (mesh: Object3D) => mesh.layers.enable(TEXT_REGION_LAYER)
+
 /** A mesh with toon shading and, by default, an inverted-hull ink outline. */
 export function InkedMesh({
   geometry,
@@ -42,13 +46,14 @@ export function InkedMesh({
   ring = noRing,
   ...groupProps
 }: InkedMeshProps) {
+  const region = useContext(TextRegionContext)
   const toon = useMemo(
-    () => createToonMaterial({ color, patch, paint, rim, flat, rimBoost }),
-    [color, patch, paint, rim, flat, rimBoost],
+    () => createToonMaterial({ color, patch, paint, rim, flat, rimBoost, region }),
+    [color, patch, paint, rim, flat, rimBoost, region],
   )
   const hull = useMemo(
-    () => (outline > 0 ? createOutlineMaterial(outline, ring) : null),
-    [outline, ring],
+    () => (outline > 0 ? createOutlineMaterial(outline, ring, region) : null),
+    [outline, ring, region],
   )
   const hullGeometry = useMemo(
     () => (outline > 0 ? addOutlineNormals(geometry) : null),
@@ -60,8 +65,10 @@ export function InkedMesh({
 
   return (
     <group {...groupProps}>
-      <mesh geometry={geometry} material={toon} />
-      {hull && hullGeometry && <mesh geometry={hullGeometry} material={hull} raycast={() => null} />}
+      <mesh geometry={geometry} material={toon} onUpdate={joinRegionPass} />
+      {hull && hullGeometry && (
+        <mesh geometry={hullGeometry} material={hull} raycast={() => null} onUpdate={joinRegionPass} />
+      )}
     </group>
   )
 }

@@ -1,5 +1,6 @@
 import { BackSide, BufferAttribute, Color, ShaderMaterial, type BufferGeometry } from 'three'
 import { KEY_LINE, RISO } from '../config'
+import { regionPass } from '../print/regions'
 import { noiseGlsl } from './noise.glsl'
 import type { SharedFloat } from './toon'
 
@@ -25,8 +26,15 @@ const fragmentShader = /* glsl */ `
   uniform vec3 uColor;
   uniform vec3 uRingColor;
   uniform float uRing;
+  uniform float uRegionPass;
+  uniform float uRegion;
 
   void main() {
+    if (uRegionPass > 0.5) {
+      gl_FragColor = vec4(uRegion / 255.0, 0.0, 0.0, 1.0);
+      return;
+    }
+
     gl_FragColor = vec4(mix(uColor, uRingColor, uRing), 1.0);
     #include <colorspace_fragment>
   }
@@ -36,7 +44,7 @@ const inkColor = new Color(KEY_LINE)
 /** Printed in the highlight ink, like the hover. */
 const ringColor = new Color(RISO.pink)
 
-export function createOutlineMaterial(thickness: number, ring: SharedFloat) {
+export function createOutlineMaterial(thickness: number, ring: SharedFloat, region: number) {
   return new ShaderMaterial({
     vertexShader,
     fragmentShader,
@@ -46,6 +54,8 @@ export function createOutlineMaterial(thickness: number, ring: SharedFloat) {
       uRingColor: { value: ringColor },
       uThickness: { value: thickness },
       uRing: ring,
+      uRegion: { value: region },
+      uRegionPass: regionPass,
     },
   })
 }

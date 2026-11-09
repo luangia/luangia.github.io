@@ -1,5 +1,7 @@
 import { CanvasTexture, DataTexture, LinearFilter, LinearMipmapLinearFilter, NearestFilter, RedFormat } from 'three'
 import { passages } from '../../content'
+import { MONO_FAMILY, TYPE_WEIGHT } from '../../fonts'
+import { TEXT_REGIONS } from './regions'
 
 const ATLAS_COLUMNS = 16
 const TILE_WIDTH = 36
@@ -7,10 +9,29 @@ const TILE_HEIGHT = 60
 const STREAM_WIDTH = 256
 /** Gap between passages in the running text. */
 const PASSAGE_BREAK = '   '
-
-/** All passages as one line of running text, in reading order. */
+const FONT = `${TYPE_WEIGHT} ${TILE_HEIGHT * 0.78}px ${MONO_FAMILY}`
+/** Glyph baseline within its tile. */
+const BASELINE = TILE_HEIGHT * 0.76
+/**
+ * Each region's passages as one line of running text, all regions back to
+ * back. A region with no passage of its own borrows the room's.
+ */
 function buildStream() {
-  return passages.map((passage) => passage.text.replace(/\s+/g, ' ')).join(PASSAGE_BREAK) + PASSAGE_BREAK
+  const texts = TEXT_REGIONS.map((region) =>
+    passages
+      .filter((passage) => passage.object === region)
+      .map((passage) => passage.text.replace(/\s+/g, ' ') + PASSAGE_BREAK)
+      .join(''),
+  )
+
+  let stream = ''
+  const spans = texts.map((text) => {
+    const span = { start: stream.length, length: text.length }
+    stream += text
+    return span
+  })
+
+  return { stream, spans: spans.map((span) => (span.length > 0 ? span : spans[0])) }
 }
 
 /**
@@ -28,13 +49,13 @@ function buildAtlas(characters: string[]) {
   context.fillRect(0, 0, canvas.width, canvas.height)
   context.fillStyle = '#fff'
   context.filter = 'blur(1.6px)'
-  context.font = `600 ${TILE_HEIGHT * 0.78}px "Courier New", Courier, ui-monospace, monospace`
+  context.font = FONT
   context.textAlign = 'center'
   context.textBaseline = 'alphabetic'
 
   characters.forEach((character, index) => {
     const x = (index % ATLAS_COLUMNS) * TILE_WIDTH + TILE_WIDTH / 2
-    const y = Math.floor(index / ATLAS_COLUMNS) * TILE_HEIGHT + TILE_HEIGHT * 0.76
+    const y = Math.floor(index / ATLAS_COLUMNS) * TILE_HEIGHT + BASELINE
     context.fillText(character, x, y)
   })
 
@@ -45,9 +66,9 @@ function buildAtlas(characters: string[]) {
   return { texture, columns: ATLAS_COLUMNS, rows }
 }
 
-/** The text layer's inputs: a glyph atlas, and the passages as atlas indices. */
+/** The text layer's inputs: a glyph atlas and the passages. */
 export function createTypeLayer() {
-  const stream = buildStream()
+  const { stream, spans } = buildStream()
   const characters = [...new Set(stream)]
   const lookup = new Map(characters.map((character, index) => [character, index]))
 
@@ -64,6 +85,8 @@ export function createTypeLayer() {
 
   return {
     atlas: buildAtlas(characters),
-    stream: { texture: streamTexture, width: STREAM_WIDTH, height, length: stream.length },
+    stream: { texture: streamTexture, width: STREAM_WIDTH, height },
+    /** Where each region's text starts in the stream, and how long it runs. */
+    spans,
   }
 }

@@ -45,7 +45,8 @@ export const PALETTE = {
   silver: inkMix(0.12),
   paleGold: inkMix(0, 0.05, 0.35),
   ember: inkMix(0, 0.75, 0.7),
-  wall: inkMix(0.16),
+  /** Bare paper: the wall prints nothing, so the objects stand alone. */
+  wall: inkMix(0),
   wood: inkMix(0.15, 0.32, 0.28),
   ocean: inkMix(0.6, 0.1),
   land: inkMix(0.35, 0, 0.65),

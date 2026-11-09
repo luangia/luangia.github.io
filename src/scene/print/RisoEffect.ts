@@ -3,6 +3,7 @@ import { Color, Matrix3, Uniform, Vector2, Vector3, type Texture } from 'three'
 import { MIN_INK_TRANSMISSION, RISO } from '../config'
 import { noiseGlsl } from '../materials/noise.glsl'
 import { createTypeLayer } from './glyphs'
+import { regionBoxes } from './regions'
 
 /** Text cell size in CSS pixels; Courier's advance is about 0.6 of its height. */
 const CELL_HEIGHT = 11
@@ -10,11 +11,11 @@ const CELL_WIDTH = CELL_HEIGHT * 0.6
 /** Dot dither cell size in CSS pixels. */
 const DOT_SIZE = 2
 
-const fragmentShader = /* glsl */ `
+const createFragmentShader = (regionCount: number) => /* glsl */ `
   uniform sampler2D uGlyphs;
   uniform sampler2D uStream;
   uniform vec2 uAtlasGrid;
-  uniform vec3 uStreamInfo;
+  uniform vec2 uStreamInfo;
   uniform vec2 uCell;
   uniform float uDot;
   uniform float uExposure;
@@ -27,6 +28,9 @@ const fragmentShader = /* glsl */ `
   uniform vec2 uOffsetYellow;
   uniform float uDim;
   uniform vec2 uFocusCenter;
+  uniform sampler2D uRegions;
+  uniform vec4 uRegionBoxes[${regionCount}];
+  uniform vec2 uRegionSpans[${regionCount}];
 
   ${noiseGlsl}
 
@@ -49,7 +53,10 @@ const fragmentShader = /* glsl */ `
   vec3 separate(vec2 at) {
     vec3 color = texture2D(inputBuffer, clamp(at, 0.0, 1.0)).rgb;
     vec3 printed = clamp(pow(max(color, 0.0), vec3(1.0 / 2.2)) * uExposure, 0.002, 1.0);
-    return clamp(uSeparate * (log(printed) - log(uPaper)), 0.0, 1.0);
+    // A sliver of coverage is treated as none: the shader's sRGB curve and the
+    // 2.2 power used here differ slightly, which would put dots on bare paper.
+    vec3 coverage = uSeparate * (log(printed) - log(uPaper));
+    return clamp((coverage - 0.02) / 0.98, 0.0, 1.0);
   }
 
   // Ordered dots, each ink on its own screen angle to avoid moire.
@@ -67,20 +74,29 @@ const fragmentShader = /* glsl */ `
   // Blue is set in type: each cell prints the next character of the passages,
   // thinner where the tone is light and bolder where it is dark. Tone is read
   // per pixel, so letters are cut cleanly at object edges, like a stencil.
-  float typeset(vec2 pixel, float tone) {
-    vec2 fromTop = vec2(pixel.x, resolution.y - pixel.y);
-    vec2 cell = floor(fromTop / uCell);
-    vec2 inCell = fract(fromTop / uCell);
+  float glyphShape(float glyph, vec2 inCell) {
+    vec2 tile = vec2(mod(glyph, uAtlasGrid.x), floor(glyph / uAtlasGrid.x));
+    return texture2D(uGlyphs, (tile + inCell) / uAtlasGrid).r;
+  }
 
+  // Each region (an object, or the room) prints its own passage, laid out from
+  // the top left of its on-screen box so lines read on from row to row.
+  float typeset(vec2 pixel, float tone) {
     if (tone < 0.08) return 0.0;
 
-    float columns = floor(resolution.x / uCell.x);
-    float index = mod(cell.y * columns + cell.x, uStreamInfo.z);
+    int region = int(floor(texture2D(uRegions, pixel / resolution).r * 255.0 + 0.5));
+    vec4 box = uRegionBoxes[region];
+    vec2 span = uRegionSpans[region];
+
+    vec2 local = vec2(pixel.x, resolution.y - pixel.y) - box.xy;
+    vec2 cell = floor(local / uCell);
+    vec2 inCell = fract(local / uCell);
+    float columns = max(1.0, floor(box.z / uCell.x));
+    float index = span.x + mod(cell.y * columns + cell.x, span.y);
     vec2 streamAt = (vec2(mod(index, uStreamInfo.x), floor(index / uStreamInfo.x)) + 0.5) / uStreamInfo.xy;
     float glyph = floor(texture2D(uStream, streamAt).r * 255.0 + 0.5);
 
-    vec2 tile = vec2(mod(glyph, uAtlasGrid.x), floor(glyph / uAtlasGrid.x));
-    float shape = texture2D(uGlyphs, (tile + inCell) / uAtlasGrid).r;
+    float shape = glyphShape(glyph, inCell);
 
     float threshold = mix(0.8, 0.2, tone);
     float letters = smoothstep(threshold - 0.08, threshold + 0.08, shape);
@@ -144,18 +160,21 @@ export class RisoEffect extends Effect {
   private readonly textures: Texture[]
 
   constructor() {
-    const { atlas, stream } = createTypeLayer()
+    const { atlas, stream, spans } = createTypeLayer()
     const paper = srgb(RISO.paper)
     const inks = [srgb(RISO.blue), srgb(RISO.pink), srgb(RISO.yellow)]
 
-    super('RisoEffect', fragmentShader, {
+    super('RisoEffect', createFragmentShader(regionBoxes.length), {
       attributes: EffectAttribute.CONVOLUTION,
       blendFunction: BlendFunction.NORMAL,
       uniforms: new Map<string, Uniform<unknown>>([
         ['uGlyphs', new Uniform(atlas.texture)],
         ['uStream', new Uniform(stream.texture)],
         ['uAtlasGrid', new Uniform(new Vector2(atlas.columns, atlas.rows))],
-        ['uStreamInfo', new Uniform(new Vector3(stream.width, stream.height, stream.length))],
+        ['uStreamInfo', new Uniform(new Vector2(stream.width, stream.height))],
+        ['uRegions', new Uniform<Texture | null>(null)],
+        ['uRegionBoxes', new Uniform(regionBoxes)],
+        ['uRegionSpans', new Uniform(spans.map((span) => new Vector2(span.start, span.length)))],
         ['uCell', new Uniform(new Vector2(CELL_WIDTH, CELL_HEIGHT))],
         ['uDot', new Uniform(DOT_SIZE)],
         ['uExposure', new Uniform(1)],
@@ -172,6 +191,11 @@ export class RisoEffect extends Effect {
     })
 
     this.textures = [atlas.texture, stream.texture]
+  }
+
+  /** The region pass's output: which passage each pixel is set in. */
+  setRegions(texture: Texture) {
+    ;(this.uniforms.get('uRegions') as Uniform<Texture | null>).value = texture
   }
 
   /** Keeps cells and offsets a constant size in CSS pixels. */

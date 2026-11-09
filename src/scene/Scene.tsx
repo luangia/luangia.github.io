@@ -1,6 +1,5 @@
 import { Backdrop } from './Backdrop'
 import { CameraRig } from './CameraRig'
-import { Candle } from './Candle'
 import { Desk } from './Desk'
 import { Dust } from './Dust'
 import { Effects } from './Effects'
@@ -17,7 +16,6 @@ export function Scene() {
       <CameraRig />
       <Backdrop />
       <Desk />
-      <Candle />
       <Portrait />
       <Laptop />
       <Books />

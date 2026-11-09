@@ -37,7 +37,7 @@ export default function DeskView() {
         </Canvas>
       </div>
 
-      <Colophon className="colophon" />
+      <Colophon className="colophon" compact />
       <Panel />
     </main>
   )

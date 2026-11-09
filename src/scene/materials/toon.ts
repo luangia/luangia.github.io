@@ -1,5 +1,6 @@
 import { Color, ShaderMaterial } from 'three'
 import { PALETTE, RISO } from '../config'
+import { regionPass } from '../print/regions'
 import { lighting } from './lighting'
 import { noiseGlsl } from './noise.glsl'
 
@@ -21,6 +22,8 @@ const vertexShader = /* glsl */ `
 const fragmentShader = /* glsl */ `
   uniform vec3 uColor;
   uniform vec3 uShade;
+  uniform float uRegionPass;
+  uniform float uRegion;
   uniform vec3 uHighlight;
   uniform vec3 uPatchColor;
   uniform float uPatch;
@@ -57,6 +60,12 @@ const fragmentShader = /* glsl */ `
   }
 
   void main() {
+    // The region pass records which passage this surface is set in.
+    if (uRegionPass > 0.5) {
+      gl_FragColor = vec4(uRegion / 255.0, 0.0, 0.0, 1.0);
+      return;
+    }
+
     vec3 point = vWorldPosition;
     vec3 normal = normalize(vWorldNormal);
     vec3 view = normalize(cameraPosition - point);
@@ -123,9 +132,11 @@ type ToonOptions = {
   /** Skip light and shade, printing the base color as is. */
   flat?: boolean
   rimBoost: SharedFloat
+  /** Index into TEXT_REGIONS. */
+  region: number
 }
 
-export function createToonMaterial({ color, patch, paint, rim, flat = false, rimBoost }: ToonOptions) {
+export function createToonMaterial({ color, patch, paint, rim, flat = false, rimBoost, region }: ToonOptions) {
   return new ShaderMaterial({
     vertexShader,
     fragmentShader,
@@ -139,6 +150,8 @@ export function createToonMaterial({ color, patch, paint, rim, flat = false, rim
       uPaint: { value: paint },
       uRim: { value: rim },
       uFlat: { value: flat ? 1 : 0 },
+      uRegion: { value: region },
+      uRegionPass: regionPass,
       uRimBoost: rimBoost,
     },
   })

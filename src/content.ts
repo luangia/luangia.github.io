@@ -84,6 +84,8 @@ export const contact: {
 } = contactJson
 
 export type Passage = {
+  /** Which part of the print is set in it: 'room' or a section's object. */
+  object: 'room' | 'about' | 'projects' | 'reading' | 'languages' | 'resume' | 'contact'
   title: string
   author: string
   year: number
@@ -92,6 +94,6 @@ export type Passage = {
 }
 
 /** Public-domain passages that the print's blue layer is typeset in. */
-export const passages: Passage[] = passagesJson
+export const passages = passagesJson as Passage[]
 
 export const site = siteJson

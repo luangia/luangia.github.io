@@ -2,12 +2,13 @@ import { Html, useCursor } from '@react-three/drei'
 import { useFrame, type ThreeEvent } from '@react-three/fiber'
 import { easing } from 'maath'
 import { useMemo, useRef, useState, type ReactNode } from 'react'
-import type { Group } from 'three'
+import { Vector3, type Group } from 'three'
 import { site } from '../../content'
 import { useReducedMotion } from '../../hooks/useReducedMotion'
 import { useDeskStore, type SectionId } from '../../state/store'
 import { OBJECT_HOVER, OBJECTS } from '../config'
 import type { SharedFloat } from '../materials/toon'
+import { TextRegionContext, regionBoxes, regionIndex } from '../print/regions'
 
 export type ObjectEffects = {
   rimBoost: SharedFloat
@@ -25,6 +26,17 @@ type DeskObjectProps = {
   children: (effects: ObjectEffects) => ReactNode
 }
 
+/** The eight corners of a hit area, in the object's own space. */
+function getBoxCorners({ position, size }: DeskObjectProps['hitArea']) {
+  return [-0.5, 0.5].flatMap((x) =>
+    [-0.5, 0.5].flatMap((y) =>
+      [-0.5, 0.5].map(
+        (z) => new Vector3(position[0] + x * size[0], position[1] + y * size[1], position[2] + z * size[2]),
+      ),
+    ),
+  )
+}
+
 /** Gives a desk model its hover, label, focus ring and click behaviour. */
 export function DeskObject({ id, hitArea, labelHeight, children }: DeskObjectProps) {
   const focused = useDeskStore((state) => state.focused)
@@ -36,12 +48,35 @@ export function DeskObject({ id, hitArea, labelHeight, children }: DeskObjectPro
   const active = (hovered || keyboardFocused) && focused === null
   const showRing = keyboardFocused && focused === null
   const lifted = useRef<Group>(null!)
+  const placed = useRef<Group>(null!)
+  const region = regionIndex(id)
+  const corners = useMemo(() => getBoxCorners(hitArea), [hitArea])
+  const projected = useMemo(() => new Vector3(), [])
   const effects = useMemo<ObjectEffects>(() => ({ rimBoost: { value: 0 }, ring: { value: 0 } }), [])
 
   useCursor(hovered && focused === null)
 
-  useFrame((_, delta) => {
+  useFrame(({ camera, gl, size }, delta) => {
     const smoothTime = reducedMotion ? 0 : OBJECT_HOVER.smoothTime
+
+    // The object's passage is laid out from the top left of its on-screen box.
+    const ratio = gl.getPixelRatio()
+    let left = Infinity
+    let top = Infinity
+    let right = -Infinity
+    let bottom = -Infinity
+
+    for (const corner of corners) {
+      projected.copy(corner).applyMatrix4(placed.current.matrixWorld).project(camera)
+      const x = ((projected.x + 1) / 2) * size.width * ratio
+      const y = ((1 - projected.y) / 2) * size.height * ratio
+      left = Math.min(left, x)
+      right = Math.max(right, x)
+      top = Math.min(top, y)
+      bottom = Math.max(bottom, y)
+    }
+
+    regionBoxes[region].set(left, top, right - left, bottom - top)
 
     easing.damp(lifted.current.position, 'y', active && !reducedMotion ? OBJECT_HOVER.lift : 0, smoothTime, delta)
     easing.damp(effects.rimBoost, 'value', active ? 1 : 0, smoothTime, delta)
@@ -62,7 +97,7 @@ export function DeskObject({ id, hitArea, labelHeight, children }: DeskObjectPro
   }
 
   return (
-    <group position={OBJECTS[id].position}>
+    <group position={OBJECTS[id].position} ref={placed}>
       {/* Stays put while the model lifts, so the rise can't flicker the hover off. */}
       <mesh
         position={hitArea.position}
@@ -75,7 +110,7 @@ export function DeskObject({ id, hitArea, labelHeight, children }: DeskObjectPro
       </mesh>
 
       <group ref={lifted}>
-        {children(effects)}
+        <TextRegionContext.Provider value={region}>{children(effects)}</TextRegionContext.Provider>
 
         {active && (
           <Html center position={[0, labelHeight, 0]} wrapperClass="object-label-anchor">
