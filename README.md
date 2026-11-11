@@ -34,7 +34,31 @@ The dev server runs at http://localhost:5173 and reloads as you edit.
 | `npm run preview` | Serve the production build locally |
 | `npm run typecheck` | Typecheck without building |
 
-The build is a plain static site, so `dist/` can be hosted anywhere that serves files (Cloudflare Pages, Netlify, Vercel and so on). No hosting is set up yet.
+The build is a plain static site, so `dist/` can be hosted anywhere that serves files.
+
+## Deploying to GitHub Pages
+
+`.github/workflows/deploy.yml` builds the site and publishes it on every push to `master`. You can also run it by hand from the **Actions** tab.
+
+One-time setup:
+
+1. The repository must be public, unless the account has GitHub Pro.
+2. In **Settings → Pages → Build and deployment**, set **Source** to **GitHub Actions**.
+
+The workflow asks GitHub where the site will live and builds for that path, so it works either way:
+
+- Keep this repository's name, and the site is at `https://luangia.github.io/LuanWebsite/`.
+- Rename the repository to `luangia.github.io`, and it is at `https://luangia.github.io/`.
+
+To check a sub-path build locally before pushing:
+
+```bash
+npm run build -- --base /LuanWebsite/
+```
+
+```bash
+npx vite preview --base /LuanWebsite/
+```
 
 ## Using the site
 
@@ -61,7 +85,7 @@ All text lives in `content/`, never in components, so you can update the site wi
 | `content/site.json` | Interface text: section labels and titles, button text and the scene description |
 | `content/passages.json` | The book passages printed in the scene (see below) |
 
-To offer a resume download, put the PDF in `public/` and set `pdf` in `content/resume.json` to its path, such as `"/resume.pdf"`. Empty links (`null`) are simply hidden.
+To offer a resume download, put the PDF in `public/` and set `pdf` in `content/resume.json` to its file name, such as `"resume.pdf"`. Leave off the leading `/`, so it still works when the site is served from a sub-path like `/LuanWebsite/`. Empty links (`null`) are simply hidden.
 
 ### Passages
 

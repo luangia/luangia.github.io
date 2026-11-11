@@ -25,7 +25,7 @@ export type Book = {
   author: string
   status: BookStatus
   rating: number | null
-  note: string
+  note: string | null
   quote: string | null
 }
 

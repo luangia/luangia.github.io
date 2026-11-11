@@ -17,7 +17,7 @@ export function ReadingSection() {
                 <li className="card" key={`${book.title}-${book.author}`}>
                   <h4>{book.title}</h4>
                   <p className="byline">{book.author}</p>
-                  <p>{book.note}</p>
+                  {book.note && <p>{book.note}</p>}
                   {book.quote && <blockquote>{book.quote}</blockquote>}
                   {book.rating !== null && (
                     <dl>
