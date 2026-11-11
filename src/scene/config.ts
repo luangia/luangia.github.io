@@ -6,7 +6,7 @@ import type { SectionId } from '../state/store'
  * separates the rendered scene into these three inks.
  */
 export const RISO = {
-  paper: '#f3ecdc',
+  paper: '#efe3c8',
   blue: '#0078bf',
   pink: '#ff48b0',
   yellow: '#ffe800',

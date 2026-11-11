@@ -1,8 +1,8 @@
 [
   {
     "title": "Etymodendron",
-    "summary": "TODO",
-    "role": "TODO",
+    "summary": "A interactive graph visualizing interconnecting words, tracing back to common Pro-Indo-European roots.",
+    "role": "Owner",
     "stack": ["TODO"],
     "links": {
       "github": null,
@@ -13,9 +13,9 @@
   },
   {
     "title": "Tone-to-emoji parser",
-    "summary": "TODO",
-    "role": "TODO",
-    "stack": ["TODO"],
+    "summary": "A parser that maps written tone indicators to matching emojis.",
+    "role": "Owner",
+    "stack": ["Javascript"],
     "links": {
       "github": null,
       "live": "https://luangia.github.io/emoji-parser/"

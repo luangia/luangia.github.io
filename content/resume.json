@@ -11,9 +11,21 @@
   ],
   "education": [
     {
+      "title": "M.S. in Computer Science",
+      "organization": "Portlands State University",
+      "dates": "2026",
+      "detail": null
+    },
+    {
       "title": "B.A. in English",
-      "organization": "TODO",
-      "dates": "TODO",
+      "organization": "Drury University",
+      "dates": "2021",
+      "detail": null
+    },
+    {
+      "title": "B.S. in Computer Science",
+      "organization": "Drury University",
+      "dates": "2021",
       "detail": null
     }
   ]
