@@ -1,12 +1,18 @@
 {
   "pdf": null,
-  "summary": "TODO",
+  "summary": "Nearly three years building high-throughput backend systems at Qualtrics and Farlinium. M.S. in Computer Science from Portland State, with work in real-time graphics, AR and LLM agents.",
   "experience": [
     {
-      "title": "TODO",
-      "organization": "TODO",
-      "dates": "TODO",
-      "detail": "TODO"
+      "title": "Software Engineer - Technical Consultant",
+      "organization": "Farlinium",
+      "dates": "Dec 2023 - Jul 2024",
+      "detail": "Validated OpenGL/C++ assignments before release; mentored 20+ students on rendering pipelines and matrix transformations."
+    },
+    {
+      "title": "Software Engineer",
+      "organization": "Qualtrics",
+      "dates": "Aug 2021 - Oct 2023",
+      "detail": "Optimized a high-throughput file processing engine in Node.js and Go: 8% lower processing latency, scaled to 100+ enterprise workflows at 99.2% uptime. Built customizable voice-to-text solutions for external call centers, processing 10,000+ audio files a day (file decryption, audio stitching, metadata rollup). Ran production deployments across IBM Cloud and AWS (U.S. and E.U.) with Kubernetes, Docker and Splunk; monitored system health and resolved critical issues."
     }
   ],
   "education": [

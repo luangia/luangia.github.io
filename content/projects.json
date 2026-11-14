@@ -3,7 +3,7 @@
     "title": "Etymodendron",
     "summary": "A interactive graph visualizing interconnecting words, tracing back to common Pro-Indo-European roots.",
     "role": "Owner",
-    "stack": ["TODO"],
+    "stack": ["TypeScript", "D3.js", "Vite"],
     "links": {
       "github": null,
       "live": "https://etymodendron.pages.dev/"
