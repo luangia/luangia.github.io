@@ -1,13 +1,17 @@
 import { BlendFunction, Effect, EffectAttribute } from 'postprocessing'
 import { Color, Matrix3, Uniform, Vector2, Vector3, type Texture } from 'three'
-import { MIN_INK_TRANSMISSION, RISO } from '../config'
+import { MIN_INK_TRANSMISSION, RISO, TYPE_STYLE } from '../config'
 import { noiseGlsl } from '../materials/noise.glsl'
 import { createTypeLayer } from './glyphs'
-import { regionBoxes } from './regions'
+import { TEXT_REGIONS, regionBoxes } from './regions'
 
 /** Text cell size in CSS pixels; Courier's advance is about 0.6 of its height. */
-const CELL_HEIGHT = 11
-const CELL_WIDTH = CELL_HEIGHT * 0.6
+const CELL_HEIGHT = 9
+/**
+ * The smallest line any passage is set at, in device pixels. On a high-density
+ * screen small type stays readable; on an ordinary one it needs this floor.
+ */
+const MIN_LINE_PIXELS = 9
 /** Dot dither cell size in CSS pixels. */
 const DOT_SIZE = 2
 
@@ -15,8 +19,11 @@ const createFragmentShader = (regionCount: number) => /* glsl */ `
   uniform sampler2D uGlyphs;
   uniform sampler2D uStream;
   uniform vec2 uAtlasGrid;
+  uniform vec2 uTileInset;
+  uniform vec2 uTileScale;
   uniform vec2 uStreamInfo;
   uniform vec2 uCell;
+  uniform float uMinLine;
   uniform float uDot;
   uniform float uExposure;
   uniform mat3 uSeparate;
@@ -31,6 +38,8 @@ const createFragmentShader = (regionCount: number) => /* glsl */ `
   uniform sampler2D uRegions;
   uniform vec4 uRegionBoxes[${regionCount}];
   uniform vec2 uRegionSpans[${regionCount}];
+  uniform float uRegionSize[${regionCount}];
+  uniform float uRegionWeight[${regionCount}];
 
   ${noiseGlsl}
 
@@ -76,32 +85,49 @@ const createFragmentShader = (regionCount: number) => /* glsl */ `
   // per pixel, so letters are cut cleanly at object edges, like a stencil.
   float glyphShape(float glyph, vec2 inCell) {
     vec2 tile = vec2(mod(glyph, uAtlasGrid.x), floor(glyph / uAtlasGrid.x));
-    return texture2D(uGlyphs, (tile + inCell) / uAtlasGrid).r;
+    return texture2D(uGlyphs, (tile + uTileInset + inCell * uTileScale) / uAtlasGrid).r;
   }
 
   // Each region (an object, or the room) prints its own passage, laid out from
   // the top left of its on-screen box so lines read on from row to row.
+  // Tone above which a passage prints as paper letters on solid ink.
+  const float KNOCKOUT_TONE = 0.7;
+
   float typeset(vec2 pixel, float tone) {
     if (tone < 0.08) return 0.0;
 
     int region = int(floor(texture2D(uRegions, pixel / resolution).r * 255.0 + 0.5));
+
+    // Surfaces with no passage, like the desk, print their blue as dots.
+    if (region >= ${regionCount}) return dots(tone, pixel, 1.31);
+
     vec4 box = uRegionBoxes[region];
     vec2 span = uRegionSpans[region];
+    if (span.y < 0.5) return dots(tone, pixel, 1.31);
 
     vec2 local = vec2(pixel.x, resolution.y - pixel.y) - box.xy;
-    vec2 cell = floor(local / uCell);
-    vec2 inCell = fract(local / uCell);
-    float columns = max(1.0, floor(box.z / uCell.x));
+    // Each object's passage is set at its own size and weight.
+    // Never below the legibility floor, however small the size or the screen.
+    vec2 cellSize = uCell * max(uRegionSize[region], uMinLine / uCell.y);
+    vec2 cell = floor(local / cellSize);
+    vec2 inCell = fract(local / cellSize);
+    float columns = max(1.0, floor(box.z / cellSize.x));
     float index = span.x + mod(cell.y * columns + cell.x, span.y);
     vec2 streamAt = (vec2(mod(index, uStreamInfo.x), floor(index / uStreamInfo.x)) + 0.5) / uStreamInfo.xy;
     float glyph = floor(texture2D(uStream, streamAt).r * 255.0 + 0.5);
 
     float shape = glyphShape(glyph, inCell);
 
-    float threshold = mix(0.8, 0.2, tone);
+    float threshold = mix(0.8, 0.2, tone) - uRegionWeight[region];
     float letters = smoothstep(threshold - 0.08, threshold + 0.08, shape);
     float fill = step(bayer8(pixel / uDot), (tone - 0.62) / 0.38);
-    return max(letters, fill);
+    float inked = max(letters, fill);
+
+    // Knockout: in the darkest areas the ink goes down solid and the letters
+    // stay bare paper, so the passage still reads instead of filling in.
+    // Paper letters are set a little bold, as ink spreads into thin strokes.
+    float paperLetters = smoothstep(0.34, 0.46, shape - uRegionWeight[region]);
+    return mix(inked, 1.0 - paperLetters, step(KNOCKOUT_TONE, tone));
   }
 
   void mainImage(const in vec4 inputColor, const in vec2 uv, out vec4 outputColor) {
@@ -158,6 +184,8 @@ function createSeparationMatrix(inks: Vector3[]) {
 /** Prints the rendered scene as a three-ink risograph. */
 export class RisoEffect extends Effect {
   private readonly textures: Texture[]
+  /** Width over height of a letter's cell, measured from the font. */
+  private readonly cellAspect: number
 
   constructor() {
     const { atlas, stream, spans } = createTypeLayer()
@@ -171,11 +199,16 @@ export class RisoEffect extends Effect {
         ['uGlyphs', new Uniform(atlas.texture)],
         ['uStream', new Uniform(stream.texture)],
         ['uAtlasGrid', new Uniform(new Vector2(atlas.columns, atlas.rows))],
+        ['uTileInset', new Uniform(new Vector2(atlas.inset.x, atlas.inset.y))],
+        ['uTileScale', new Uniform(new Vector2(atlas.scale.x, atlas.scale.y))],
+        ['uRegionSize', new Uniform(TEXT_REGIONS.map((region) => TYPE_STYLE[region].size))],
+        ['uRegionWeight', new Uniform(TEXT_REGIONS.map((region) => TYPE_STYLE[region].weight))],
         ['uStreamInfo', new Uniform(new Vector2(stream.width, stream.height))],
         ['uRegions', new Uniform<Texture | null>(null)],
         ['uRegionBoxes', new Uniform(regionBoxes)],
         ['uRegionSpans', new Uniform(spans.map((span) => new Vector2(span.start, span.length)))],
-        ['uCell', new Uniform(new Vector2(CELL_WIDTH, CELL_HEIGHT))],
+        ['uCell', new Uniform(new Vector2(CELL_HEIGHT * atlas.cellAspect, CELL_HEIGHT))],
+        ['uMinLine', new Uniform(MIN_LINE_PIXELS)],
         ['uDot', new Uniform(DOT_SIZE)],
         ['uExposure', new Uniform(1)],
         ['uSeparate', new Uniform(createSeparationMatrix(inks))],
@@ -191,6 +224,7 @@ export class RisoEffect extends Effect {
     })
 
     this.textures = [atlas.texture, stream.texture]
+    this.cellAspect = atlas.cellAspect
   }
 
   /** The region pass's output: which passage each pixel is set in. */
@@ -200,7 +234,7 @@ export class RisoEffect extends Effect {
 
   /** Keeps cells and offsets a constant size in CSS pixels. */
   setPixelRatio(ratio: number) {
-    ;(this.uniforms.get('uCell') as Uniform<Vector2>).value.set(CELL_WIDTH * ratio, CELL_HEIGHT * ratio)
+    ;(this.uniforms.get('uCell') as Uniform<Vector2>).value.set(CELL_HEIGHT * this.cellAspect * ratio, CELL_HEIGHT * ratio)
     ;(this.uniforms.get('uDot') as Uniform<number>).value = DOT_SIZE * ratio
     ;(this.uniforms.get('uOffsetPink') as Uniform<Vector2>).value.set(1.5 * ratio, -1 * ratio)
     ;(this.uniforms.get('uOffsetYellow') as Uniform<Vector2>).value.set(-1 * ratio, 1.5 * ratio)

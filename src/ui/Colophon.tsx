@@ -1,5 +1,6 @@
 import { Fragment } from 'react'
-import { passages, site } from '../content'
+import { site } from '../content'
+import { printedPassages as passages } from '../typeLayer'
 
 type ColophonProps = {
   className?: string

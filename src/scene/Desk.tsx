@@ -2,6 +2,7 @@ import { CylinderGeometry } from 'three'
 import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js'
 import { PALETTE } from './config'
 import { InkedMesh } from './InkedMesh'
+import { NO_TEXT_REGION, TextRegionContext } from './print/regions'
 
 const LEG_HEIGHT = 5
 const LEG_X = 2.72
@@ -21,10 +22,12 @@ const LEGS: [number, number][] = [
 
 /** The legs and apron only come into frame on narrow screens. */
 export function Desk() {
+  // The desk carries no passage; its blue prints as plain dots.
   return (
-    <>
+    <TextRegionContext.Provider value={NO_TEXT_REGION}>
       <InkedMesh
-        color={PALETTE.wood}
+        color={PALETTE.deskWood}
+        flat
         geometry={topGeometry}
         outline={0.018}
         paint={0.8}
@@ -32,7 +35,8 @@ export function Desk() {
         rim={0}
       />
       <InkedMesh
-        color={PALETTE.wood}
+        color={PALETTE.deskWood}
+        flat
         geometry={apronGeometry}
         outline={0.018}
         paint={0.8}
@@ -41,7 +45,8 @@ export function Desk() {
       />
       {LEGS.map(([x, z]) => (
         <InkedMesh
-          color={PALETTE.wood}
+          color={PALETTE.deskWood}
+        flat
           geometry={legGeometry}
           key={`${x},${z}`}
           outline={0.018}
@@ -50,6 +55,6 @@ export function Desk() {
           rim={0}
         />
       ))}
-    </>
+    </TextRegionContext.Provider>
   )
 }

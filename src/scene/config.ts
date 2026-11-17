@@ -6,7 +6,7 @@ import type { SectionId } from '../state/store'
  * separates the rendered scene into these three inks.
  */
 export const RISO = {
-  paper: '#efe3c8',
+  paper: '#f1e9d2',
   blue: '#0078bf',
   pink: '#ff48b0',
   yellow: '#ffe800',
@@ -48,6 +48,11 @@ export const PALETTE = {
   /** Bare paper: the wall prints nothing, so the objects stand alone. */
   wall: inkMix(0),
   wood: inkMix(0.15, 0.32, 0.28),
+  /**
+   * The desk prints flat in this color: no blue of its own and no shading blue,
+   * because its blue prints as dots, which read grey on wood.
+   */
+  deskWood: inkMix(0, 0.36, 0.3),
   ocean: inkMix(0.6, 0.1),
   land: inkMix(0.35, 0, 0.65),
   /** Laptop screen colors. */
@@ -60,6 +65,20 @@ export const PALETTE = {
   skyGlow: inkMix(0.38),
   cloud: inkMix(0.1, 0.12),
   maria: inkMix(0.15, 0, 0.12),
+}
+
+/**
+ * How each region's passage is set. `size` scales the letters (1 is a 9 CSS px
+ * line); `weight` thickens strokes above 0 and thins them below, about ±0.1.
+ */
+export const TYPE_STYLE: Record<'room' | SectionId, { size: number; weight: number }> = {
+  room: { size: 1, weight: 0 },
+  about: { size: 0.85, weight: 0.06 },
+  projects: { size: 0.85, weight: 0 },
+  reading: { size: 0.85, weight: -0.03 },
+  languages: { size: 0.85, weight: 0.04 },
+  resume: { size: 0.85, weight: -0.04 },
+  contact: { size: 0.85, weight: 0 },
 }
 
 /** Outline color. The print pass spots it and prints a crisp key line. */

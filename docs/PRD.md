@@ -37,7 +37,7 @@ Earlier phases were built in a Hades II–inspired painted style. The scene, cam
 | --- | --- |
 | Spot inks | 2–3 risograph inks, overprinted on paper. No other colors: any mix comes from layers overlapping |
 | Dithered tone | Every gradient is dots: ordered (Bayer) or blue-noise dithering, with a cell large enough to see (about 2–3 CSS px) |
-| Type as texture | One ink layer is set in passages from classic books, each desk object in its own book. Tone controls how densely the glyphs print; the lightest areas are readable |
+| Type as texture | One ink layer is set in passages from classic books, on the desk objects only, each in its own book. Tone controls how densely the glyphs print; in the darkest areas the letters knock out as bare paper, so the passage stays readable everywhere |
 | Misregistration | Each ink layer is offset by 1–3 px and slightly rotated, so edges and colors don't quite line up |
 | Paper | Off-white uncoated stock with visible grain and fibres, uneven ink coverage, and faint ink specks |
 | Light as bare paper | The moon and laptop screen are unprinted paper. No bloom |
@@ -107,7 +107,7 @@ Keep the 3D scene, lighting and camera, and change how the result is printed. Sc
 | Stepped tone shading (existing toon shader) | Gives the dither clean tone shapes to work with | Shade is added blue ink, not darkening, so shadows stay clean instead of muddy |
 | Ink recipes and separation | Scene colors are defined as ink amounts; the print pass separates them back out | Separation treats inks as filters that multiply over the paper. Light sources render brighter than paper, so they print as bare paper |
 | Ordered or blue-noise dithering | Turns coverage into dots | Screen-space, fixed to the page like a real print; cell size scales with device pixel ratio |
-| Text halftone layer | Sets the blue ink in passages from classic books, a different book per object | A region pass renders each object as an ID, and each object's passage is laid out from the top left of its on-screen box, so lines read on from row to row. Tone, read per pixel, decides how heavily a glyph prints, so letters are cut cleanly at object edges. The desk, window and sky share the room's passages |
+| Text halftone layer | Sets the blue ink on the desk objects only, a different book per object | A region pass renders each object as an ID, and each object's passage is laid out from the top left of its on-screen box, so lines read on from row to row. Tone, read per pixel, decides how heavily a glyph prints, so letters are cut cleanly at object edges. In the darkest areas the letters knock out as bare paper on solid ink. The desk, window and sky carry no type and print their blue as dots (ROOM_TYPE in src/typeLayer.ts). Cells are measured from the font so letters set tight; all objects share one small size, with a 9-device-pixel floor, and differ only slightly in weight (TYPE_STYLE in config.ts) |
 | Misregistration and overprint | Riso layering | Per-ink offset and slight rotation; inks multiply over the paper |
 | Paper texture | The stock | Static grain, fibres, uneven coverage and specks; never animated |
 | Key line (existing inverted hull) | Object definition | Outlines render pure black, which no ink recipe produces; the pass prints them as crisp blue lines. Needs anti-aliasing off |
@@ -186,7 +186,7 @@ Dropped from the painted version: bloom, the candle, painted brush-stroke tintin
   - [x] Book text. An ASCII-art version was tried (Nov 9, 2026) and dropped
 - [ ] Which ink set? Using for now: Blue, Fluorescent Pink and Yellow on natural (cream) paper. Alternatives: Federal Blue + Fluorescent Orange; Teal + Fluorescent Pink
 - [ ] Which passages? Preference: classic literature and essays, in the spirit of Jane Austen, *The Great Gatsby*, David Foster Wallace and George Orwell
-  - In use now (content/passages.json): Wilde's preface to *Dorian Gray* on the portrait, Babbage on the Analytical Engine on the laptop, the opening of *Pride and Prejudice* on the books, Verne's *Around the World in Eighty Days* on the globe, Franklin's *Autobiography* on the scroll, Chesterfield's *Letters to His Son* on the letter, and Fitzgerald, Woolf and Twain across the desk, window and sky
+  - In use now (content/passages.json): Wilde's preface to *Dorian Gray* on the portrait, Babbage on the Analytical Engine on the laptop, the opening of *Pride and Prejudice* on the books, Verne's *Around the World in Eighty Days* on the globe, Franklin's *Autobiography* on the scroll, and Chesterfield's *Letters to His Son* on the letter. Fitzgerald, Woolf and Twain stay in the file for the room but aren't printed while the window and sky carry no type
   - Usable everywhere: Jane Austen; *The Great Gatsby* (1925)
   - Not usable: David Foster Wallace (copyrighted everywhere); George Orwell's essays (public domain in the UK and EU, but published 1931 or later, so still under US copyright until 2032–2042)
   - Public-domain essayists in a similar spirit: Virginia Woolf (*A Room of One's Own*, *The Common Reader*), Mark Twain's critical essays, G. K. Chesterton (pre-1931), Oscar Wilde, William Hazlitt, Montaigne (Cotton or Florio translation)

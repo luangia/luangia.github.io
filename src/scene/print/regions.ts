@@ -22,6 +22,12 @@ export const regionBoxes = TEXT_REGIONS.map(() => new Vector4())
 /** Set to 1 while the region pass renders, so materials output region IDs. */
 export const regionPass = { value: 0 }
 
+/**
+ * Region ID for surfaces that carry no passage. Their blue ink prints as plain
+ * dots, like the pink and yellow. Kept well past the last real region.
+ */
+export const NO_TEXT_REGION = 255
+
 /** The text region that meshes below it belong to. */
 export const TextRegionContext = createContext(0)
 
