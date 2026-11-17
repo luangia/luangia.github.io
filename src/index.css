@@ -215,6 +215,29 @@ dd {
   display: contents;
 }
 
+.highlights {
+  line-height: 1.5;
+  margin: 0;
+  padding-left: 1.1rem;
+}
+
+.highlights li + li {
+  margin-top: 0.4rem;
+}
+
+/* Skills stack the label above its list, since the lists run long. */
+.skills {
+  display: block;
+}
+
+.skill-row + .skill-row {
+  margin-top: 0.75rem;
+}
+
+.skills dd {
+  line-height: 1.5;
+}
+
 .card-links {
   display: flex;
   gap: 1rem;

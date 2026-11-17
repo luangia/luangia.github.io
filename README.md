@@ -76,11 +76,11 @@ All text lives in `content/`, never in components, so you can update the site wi
 | File | What it holds |
 | --- | --- |
 | `content/about.json` | Name, bio, values, fun facts and an optional avatar |
-| `content/projects.json` | Project cards: summary, role, stack and live and GitHub links |
+| `content/projects.json` | Project cards: summary, role (or `null` to hide it), stack and live and GitHub links |
 | `content/books.json` | Reading list: status (`reading`, `read` or `want`), rating, note and quote |
 | `content/writing.json` | Essays and writing samples |
 | `content/languages.json` | Languages, levels, current focus, study streak and words of the day |
-| `content/resume.json` | Summary, experience and education, plus an optional PDF path |
+| `content/resume.json` | Summary; experience and education, each with optional `highlights` bullets and a one-line `detail`; skill groups; and an optional PDF path |
 | `content/contact.json` | Message, email, LinkedIn and GitHub |
 | `content/site.json` | Interface text: section labels and titles, button text and the scene description |
 | `content/passages.json` | The book passages printed in the scene (see below) |

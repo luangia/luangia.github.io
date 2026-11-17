@@ -3,36 +3,78 @@
   "summary": "Nearly three years building high-throughput backend systems at Qualtrics and Farlinium. M.S. in Computer Science from Portland State, with work in real-time graphics, AR and LLM agents.",
   "experience": [
     {
-      "title": "Software Engineer - Technical Consultant",
-      "organization": "Farlinium",
-      "dates": "Dec 2023 - Jul 2024",
-      "detail": "Validated OpenGL/C++ assignments before release; mentored 20+ students on rendering pipelines and matrix transformations."
+      "title": "Technical Course Support Specialist, Computer Graphics",
+      "organization": "Portland State University",
+      "dates": "Jan 2026 – Mar 2026",
+      "detail": null,
+      "highlights": [
+        "Validated OpenGL/C++ assignments before release; mentored 20+ students on rendering pipelines and matrix transformations."
+      ]
+    },
+    {
+      "title": "Software Engineer – Technical Consultant",
+      "organization": "Farlinium, remote",
+      "dates": "Dec 2023 – Jul 2024",
+      "detail": null,
+      "highlights": [
+        "Led 15+ secure, reliable ETL and API integration implementations tailored to client needs.",
+        "Subject Matter Expert for the Qualtrics data integration pipeline.",
+        "Validated data supporting sentiment analysis of call center transcripts, improving accuracy and surfacing insights for client reporting."
+      ]
     },
     {
       "title": "Software Engineer",
-      "organization": "Qualtrics",
-      "dates": "Aug 2021 - Oct 2023",
-      "detail": "Optimized a high-throughput file processing engine in Node.js and Go: 8% lower processing latency, scaled to 100+ enterprise workflows at 99.2% uptime. Built customizable voice-to-text solutions for external call centers, processing 10,000+ audio files a day (file decryption, audio stitching, metadata rollup). Ran production deployments across IBM Cloud and AWS (U.S. and E.U.) with Kubernetes, Docker and Splunk; monitored system health and resolved critical issues."
+      "organization": "Qualtrics, remote",
+      "dates": "Aug 2021 – Oct 2023",
+      "detail": null,
+      "highlights": [
+        "Optimized a high-throughput file processing engine in Node.js and Go: 8% lower processing latency, scaled to 100+ enterprise workflows at 99.2% uptime.",
+        "Built customizable voice-to-text solutions for external call centers, processing 10,000+ audio files a day (file decryption, audio stitching, metadata rollup).",
+        "Ran production deployments across IBM Cloud and AWS (U.S. and E.U.) with Kubernetes, Docker and Splunk; monitored system health and resolved critical issues."
+      ]
+    },
+    {
+      "title": "Teaching Assistant / Math-CS Tutor",
+      "organization": "Drury University",
+      "dates": "Aug 2018 – May 2021",
+      "detail": null,
+      "highlights": [
+        "Tutored Data Structures, Algorithms and Discrete Math; graded assignments, led labs and helped debug student code."
+      ]
     }
   ],
   "education": [
     {
       "title": "M.S. in Computer Science",
-      "organization": "Portlands State University",
-      "dates": "2026",
-      "detail": null
+      "organization": "Portland State University",
+      "dates": "Sep 2024 – Mar 2026",
+      "detail": "GPA 3.87",
+      "highlights": []
     },
     {
-      "title": "B.A. in English",
+      "title": "B.S. with Honors in Computer Science, B.A. with Honors in English",
       "organization": "Drury University",
-      "dates": "2021",
-      "detail": null
+      "dates": "May 2021",
+      "detail": null,
+      "highlights": []
+    }
+  ],
+  "skills": [
+    {
+      "name": "Languages",
+      "items": "C/C++, Python, TypeScript/JavaScript, Go, Java, Swift, HTML/CSS"
     },
     {
-      "title": "B.S. in Computer Science",
-      "organization": "Drury University",
-      "dates": "2021",
-      "detail": null
+      "name": "Graphics & frameworks",
+      "items": "OpenGL, three.js, ARKit, OpenCV, NumPy, Blender, React, Node.js"
+    },
+    {
+      "name": "Infrastructure",
+      "items": "AWS, Docker, Kubernetes, Jenkins, Splunk, MongoDB, Git, Xcode"
+    },
+    {
+      "name": "AI",
+      "items": "LLM agents, ReAct, LangChain, RAG, ChromaDB, MCP, prompt engineering"
     }
   ]
 }

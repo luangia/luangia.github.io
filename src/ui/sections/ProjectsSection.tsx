@@ -8,8 +8,12 @@ export function ProjectsSection() {
           <h3>{project.title}</h3>
           <p>{project.summary}</p>
           <dl>
-            <dt>{site.ui.role}</dt>
-            <dd>{project.role}</dd>
+            {project.role && (
+              <>
+                <dt>{site.ui.role}</dt>
+                <dd>{project.role}</dd>
+              </>
+            )}
             <dt>{site.ui.stack}</dt>
             <dd>{project.stack.join(', ')}</dd>
           </dl>

@@ -3,7 +3,11 @@
     "title": "Etymodendron",
     "summary": "A interactive graph visualizing interconnecting words, tracing back to common Pro-Indo-European roots.",
     "role": "Owner",
-    "stack": ["TypeScript", "D3.js", "Vite"],
+    "stack": [
+      "TypeScript",
+      "D3.js",
+      "Vite"
+    ],
     "links": {
       "github": null,
       "live": "https://etymodendron.pages.dev/"
@@ -15,12 +19,61 @@
     "title": "Tone-to-emoji parser",
     "summary": "A parser that maps written tone indicators to matching emojis.",
     "role": "Owner",
-    "stack": ["Javascript"],
+    "stack": [
+      "JavaScript"
+    ],
     "links": {
       "github": null,
       "live": "https://luangia.github.io/emoji-parser/"
     },
     "images": [],
     "featured": true
+  },
+  {
+    "title": "Agentic Threat Detection System",
+    "summary": "A ReAct loop over auth-log alerts that queries external threat-intel APIs and a RAG store of org context, then writes incident reports with MITRE ATT&CK attribution and firewall remediation steps.",
+    "role": null,
+    "stack": [
+      "LangChain",
+      "Claude",
+      "RAG"
+    ],
+    "links": {
+      "github": null,
+      "live": null
+    },
+    "images": [],
+    "featured": false
+  },
+  {
+    "title": "Multi-plane Image Viewer",
+    "summary": "A web tool for interactive exploration of multi-plane image scenes.",
+    "role": null,
+    "stack": [
+      "Web",
+      "3D"
+    ],
+    "links": {
+      "github": null,
+      "live": null
+    },
+    "images": [],
+    "featured": false
+  },
+  {
+    "title": "AR Book Identification",
+    "summary": "Recognizes books from camera input and overlays title, author and rating in AR.",
+    "role": null,
+    "stack": [
+      "iOS",
+      "ARKit",
+      "Swift"
+    ],
+    "links": {
+      "github": null,
+      "live": null
+    },
+    "images": [],
+    "featured": false
   }
 ]

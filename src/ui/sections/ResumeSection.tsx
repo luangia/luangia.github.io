@@ -12,6 +12,13 @@ function Entries({ title, entries }: { title: string; entries: ResumeEntry[] }) 
               {entry.organization} · {entry.dates}
             </p>
             {entry.detail && <p>{entry.detail}</p>}
+            {entry.highlights.length > 0 && (
+              <ul className="highlights">
+                {entry.highlights.map((highlight) => (
+                  <li key={highlight}>{highlight}</li>
+                ))}
+              </ul>
+            )}
           </li>
         ))}
       </ul>
@@ -32,6 +39,18 @@ export function ResumeSection() {
       <p>{resume.summary}</p>
       <Entries entries={resume.experience} title={site.ui.experience} />
       <Entries entries={resume.education} title={site.ui.education} />
+
+      <section className="subsection">
+        <h3>{site.ui.skills}</h3>
+        <dl className="skills">
+          {resume.skills.map((group) => (
+            <div className="skill-row" key={group.name}>
+              <dt>{group.name}</dt>
+              <dd>{group.items}</dd>
+            </div>
+          ))}
+        </dl>
+      </section>
     </>
   )
 }

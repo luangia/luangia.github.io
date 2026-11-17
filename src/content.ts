@@ -11,7 +11,8 @@ import writingJson from '../content/writing.json'
 export type Project = {
   title: string
   summary: string
-  role: string
+  /** Left out (null) when there is no role to state. */
+  role: string | null
   stack: string[]
   links: { github: string | null; live: string | null }
   images: string[]
@@ -52,7 +53,15 @@ export type ResumeEntry = {
   title: string
   organization: string
   dates: string
+  /** One short line under the title, such as a GPA. */
   detail: string | null
+  /** Bullet points. */
+  highlights: string[]
+}
+
+export type SkillGroup = {
+  name: string
+  items: string
 }
 
 export const about: {
@@ -74,6 +83,7 @@ export const resume: {
   summary: string
   experience: ResumeEntry[]
   education: ResumeEntry[]
+  skills: SkillGroup[]
 } = resumeJson
 
 export const contact: {
