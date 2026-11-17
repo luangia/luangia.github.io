@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 
 /** Nav order. Each section has one object on the desk and one URL hash. */
-export const SECTIONS = ['about', 'projects', 'reading', 'languages', 'resume', 'contact'] as const
+export const SECTIONS = ['about', 'now', 'projects', 'reading', 'languages', 'resume', 'contact'] as const
 
 export type SectionId = (typeof SECTIONS)[number]
 

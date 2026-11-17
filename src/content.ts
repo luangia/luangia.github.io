@@ -2,6 +2,7 @@ import aboutJson from '../content/about.json'
 import booksJson from '../content/books.json'
 import contactJson from '../content/contact.json'
 import languagesJson from '../content/languages.json'
+import nowJson from '../content/now.json'
 import passagesJson from '../content/passages.json'
 import projectsJson from '../content/projects.json'
 import resumeJson from '../content/resume.json'
@@ -72,6 +73,12 @@ export const about: {
   funFacts: string[]
 } = aboutJson
 
+/** What I'm doing these days. Keep it current, or it reads as stale. */
+export const now: {
+  updated: string
+  items: { label: string; text: string }[]
+} = nowJson
+
 export const books = booksJson as Book[]
 export const writing: WritingSample[] = writingJson
 export const projects: Project[] = projectsJson
@@ -95,7 +102,7 @@ export const contact: {
 
 export type Passage = {
   /** Which part of the print is set in it: 'room' or a section's object. */
-  object: 'room' | 'about' | 'projects' | 'reading' | 'languages' | 'resume' | 'contact'
+  object: 'room' | 'about' | 'now' | 'projects' | 'reading' | 'languages' | 'resume' | 'contact'
   title: string
   author: string
   year: number

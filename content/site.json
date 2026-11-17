@@ -1,11 +1,16 @@
 {
   "title": "The Desk",
-  "sceneDescription": "A moonlit scholar's desk under an arched window. On it are a framed portrait, a laptop, a stack of books with one lying open, a globe, a rolled scroll, and a sealed letter with a quill and inkwell.",
+  "sceneDescription": "A moonlit scholar's desk under an arched window. On it are a potted monstera, a framed portrait, a laptop, a stack of books with one lying open, a globe, a rolled scroll, and a quill and inkwell. On the wall beside the window hangs a letter rack.",
   "sections": {
     "about": {
       "label": "About",
       "title": "About me",
       "openLabel": "Open About, the framed portrait"
+    },
+    "now": {
+      "label": "Now",
+      "title": "Now",
+      "openLabel": "Open Now, the monstera"
     },
     "projects": {
       "label": "Projects",
@@ -30,7 +35,7 @@
     "contact": {
       "label": "Contact",
       "title": "Contact",
-      "openLabel": "Open Contact, the sealed letter"
+      "openLabel": "Open Contact, the letter rack"
     }
   },
   "ui": {
@@ -66,6 +71,7 @@
     "linkedin": "LinkedIn",
     "noContact": "Contact details are coming soon.",
     "colophon": "Typeset in passages from",
-    "skills": "Skills"
+    "skills": "Skills",
+    "updated": "Last updated"
   }
 }

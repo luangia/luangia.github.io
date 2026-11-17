@@ -5,11 +5,12 @@ Luan Pham's personal portfolio: a moonlit scholar's desk in 3D, printed like a r
 | Object | Section |
 | --- | --- |
 | Framed portrait | About |
+| Monstera in a terracotta pot | Now |
 | Laptop | Projects |
 | Books | Reading |
 | Globe | Languages |
 | Scroll | Resume |
-| Letter, quill and inkwell | Contact |
+| Letter rack on the wall | Contact |
 
 Built with Vite, React, TypeScript, three.js, React Three Fiber, drei and `@react-three/postprocessing`.
 
@@ -81,6 +82,7 @@ All text lives in `content/`, never in components, so you can update the site wi
 | `content/writing.json` | Essays and writing samples |
 | `content/languages.json` | Languages, levels, current focus, study streak and words of the day |
 | `content/resume.json` | Summary; experience and education, each with optional `highlights` bullets and a one-line `detail`; skill groups; and an optional PDF path |
+| `content/now.json` | The Now section: what you're learning, reading, building and growing, with a last-updated date |
 | `content/contact.json` | Message, email, LinkedIn and GitHub |
 | `content/site.json` | Interface text: section labels and titles, button text and the scene description |
 | `content/passages.json` | The book passages printed in the scene (see below) |
@@ -89,7 +91,7 @@ To offer a resume download, put the PDF in `public/` and set `pdf` in `content/r
 
 ### Passages
 
-Each desk object is printed in its own book, set by the `object` field in `content/passages.json`. The value is a section name (`about`, `projects`, `reading`, `languages`, `resume`, `contact`) or `room` for the window and sky. Only the objects are lettered for now: `ROOM_TYPE` in `src/typeLayer.ts` is off, so the room's passages stay in the file but aren't printed or credited, and the window and sky print as plain dots. The desk never carries type. An object with no passage of its own borrows the room's, or prints as dots if the room has none.
+Each desk object is printed in its own book, set by the `object` field in `content/passages.json`. The value is a section name (`about`, `now`, `projects`, `reading`, `languages`, `resume`, `contact`) or `room` for the window and sky. Only the objects are lettered for now: `ROOM_TYPE` in `src/typeLayer.ts` is off, so the room's passages stay in the file but aren't printed or credited, and the window and sky print as plain dots. The desk never carries type. An object with no passage of its own borrows the room's, or prints as dots if the room has none.
 
 Passages are printed in full, so they must be in the public domain both in the US (published in 1930 or earlier, as of 2026) and in countries that use life plus 70 years (author died before 1956). Copy them exactly from [Project Gutenberg](https://www.gutenberg.org), and keep the `source` link: the colophon credits every passage automatically.
 
@@ -138,7 +140,7 @@ src/
 
 ## Credits
 
-- **Passages**, all public domain, via Project Gutenberg: Oscar Wilde, *The Picture of Dorian Gray*; Charles Babbage, *Passages from the Life of a Philosopher*; Jane Austen, *Pride and Prejudice*; Jules Verne, *Around the World in Eighty Days* (translated by George M. Towle); Benjamin Franklin, *Autobiography*; Lord Chesterfield, *Letters to His Son*. The room's passages (Fitzgerald, Woolf and Twain) are credited only while `ROOM_TYPE` is on.
+- **Passages**, all public domain, via Project Gutenberg: Oscar Wilde, *The Picture of Dorian Gray*; Charles Darwin, *The Power of Movement in Plants*; Charles Babbage, *Passages from the Life of a Philosopher*; Jane Austen, *Pride and Prejudice*; Jules Verne, *Around the World in Eighty Days* (translated by George M. Towle); Benjamin Franklin, *Autobiography*; Lord Chesterfield, *Letters to His Son*. The room's passages (Fitzgerald, Woolf and Twain) are credited only while `ROOM_TYPE` is on.
 - **Font:** [Courier Prime](https://quoteunquoteapps.com/courierprime/), under the SIL Open Font License, self-hosted through Fontsource.
 - **Art:** all scene assets are original and built in code.
 

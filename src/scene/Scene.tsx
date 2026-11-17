@@ -6,7 +6,9 @@ import { Effects } from './Effects'
 import { Books } from './objects/Books'
 import { Globe } from './objects/Globe'
 import { Laptop } from './objects/Laptop'
-import { Letter } from './objects/Letter'
+import { Inkwell } from './objects/Inkwell'
+import { LetterRack } from './objects/LetterRack'
+import { Monstera } from './objects/Monstera'
 import { Portrait } from './objects/Portrait'
 import { Scroll } from './objects/Scroll'
 
@@ -21,7 +23,9 @@ export function Scene() {
       <Books />
       <Globe />
       <Scroll />
-      <Letter />
+      <Monstera />
+      <Inkwell />
+      <LetterRack />
       <Dust />
       <Effects />
     </>

@@ -62,12 +62,12 @@ The scene is a night-time scholar's study: a wooden desk under an arched window 
 | Globe or stack of flashcards + dictionary | Language learning | Languages I speak/learn, level per language, study streak, a "word of the day" card | MVP |
 | Framed portrait or hand mirror | About me | Short bio, photo or illustrated avatar, values, fun facts | MVP |
 | Rolled scroll / parchment | Resume | Unrolls into a one-page resume; PDF download button | MVP |
-| Quill, inkwell + sealed letter | Contact | Wax-sealed envelope opens to email, LinkedIn, GitHub, contact form | MVP |
+| Letter rack on the wall, right of the window | Contact | Envelopes with a pink wax seal; opens to email, LinkedIn, GitHub. Hung on the wall to set it apart from the desk objects. The quill and inkwell stay on the desk as decoration | MVP |
+| Low-poly monstera in a terracotta pot, back-left corner of the desk | Now | What I'm learning, reading, building and growing, with a last-updated date (content/now.json). Leaves sway gently unless motion is reduced | Built Nov 16, 2026 |
 | Candle or oil lamp | Theme toggle | Removed from the scene on Nov 9, 2026. If the ink-set toggle comes back, it needs a new object | v1 |
 | Gramophone or lyre | Ambient sound | Toggles ambient music and room tone (off by default) | v1 |
 | Moon in the window | Easter egg | Click cycles moon phases; hidden note on the full moon | v2 |
 | Small companion (cat, owl or familiar) | Easter egg / guide | Idle animation; optional tooltips that suggest what to click | v2 |
-| Small potted plant (trailing leaves) | Decoration (love of plants) | Nothing. Not clickable; leaves sway gently on hover or with idle motion | v2 |
 
 **Section styling idea:** panels look like printed paper: off-white stock, text in one riso ink, all set in Courier Prime, plain cards, no ornamental frames. Headings are bold and misregistered across two inks; body text is always crisp and never dithered, so it stays readable.
 
@@ -86,7 +86,7 @@ The core loop is hover, click, zoom, read, return. Every step must also work wit
 
 **Always-visible UI**
 
-- Small nav bar or ribbon: About · Projects · Reading · Languages · Resume · Contact. Clicking jumps straight to that object.
+- Small nav bar or ribbon: About · Now · Projects · Reading · Languages · Resume · Contact. Clicking jumps straight to that object.
 - Sound toggle (off by default) and a "Simple view" link.
 - Deep links: each section has its own URL (`/#projects`, `/#reading`) so recruiters can share them.
 
@@ -186,7 +186,7 @@ Dropped from the painted version: bloom, the candle, painted brush-stroke tintin
   - [x] Book text. An ASCII-art version was tried (Nov 9, 2026) and dropped
 - [ ] Which ink set? Using for now: Blue, Fluorescent Pink and Yellow on natural (cream) paper. Alternatives: Federal Blue + Fluorescent Orange; Teal + Fluorescent Pink
 - [ ] Which passages? Preference: classic literature and essays, in the spirit of Jane Austen, *The Great Gatsby*, David Foster Wallace and George Orwell
-  - In use now (content/passages.json): Wilde's preface to *Dorian Gray* on the portrait, Babbage on the Analytical Engine on the laptop, the opening of *Pride and Prejudice* on the books, Verne's *Around the World in Eighty Days* on the globe, Franklin's *Autobiography* on the scroll, and Chesterfield's *Letters to His Son* on the letter. Fitzgerald, Woolf and Twain stay in the file for the room but aren't printed while the window and sky carry no type
+  - In use now (content/passages.json): Wilde's preface to *Dorian Gray* on the portrait, Darwin's *The Power of Movement in Plants* on the monstera, Babbage on the Analytical Engine on the laptop, the opening of *Pride and Prejudice* on the books, Verne's *Around the World in Eighty Days* on the globe, Franklin's *Autobiography* on the scroll, and Chesterfield's *Letters to His Son* on the letter rack. Fitzgerald, Woolf and Twain stay in the file for the room but aren't printed while the window and sky carry no type
   - Usable everywhere: Jane Austen; *The Great Gatsby* (1925)
   - Not usable: David Foster Wallace (copyrighted everywhere); George Orwell's essays (public domain in the UK and EU, but published 1931 or later, so still under US copyright until 2032–2042)
   - Public-domain essayists in a similar spirit: Virginia Woolf (*A Room of One's Own*, *The Common Reader*), Mark Twain's critical essays, G. K. Chesterton (pre-1931), Oscar Wilde, William Hazlitt, Montaigne (Cotton or Florio translation)

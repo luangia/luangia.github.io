@@ -48,6 +48,16 @@ export const PALETTE = {
   /** Bare paper: the wall prints nothing, so the objects stand alone. */
   wall: inkMix(0),
   wood: inkMix(0.15, 0.32, 0.28),
+  /** Monstera leaves, deepest to lightest. */
+  leafDeep: inkMix(0.82, 0.1, 0.8),
+  leaf: inkMix(0.62, 0.04, 0.8),
+  leafMid: inkMix(0.45, 0, 0.78),
+  leafLight: inkMix(0.28, 0, 0.75),
+  stem: inkMix(0.55, 0.05, 0.6),
+  /** Terracotta pot, with a slightly deeper rim, and dark potting soil. */
+  terracotta: inkMix(0.04, 0.5, 0.6),
+  terracottaRim: inkMix(0.1, 0.58, 0.62),
+  soil: inkMix(0.55, 0.45, 0.55),
   /**
    * The desk prints flat in this color: no blue of its own and no shading blue,
    * because its blue prints as dots, which read grey on wood.
@@ -74,6 +84,7 @@ export const PALETTE = {
 export const TYPE_STYLE: Record<'room' | SectionId, { size: number; weight: number }> = {
   room: { size: 1, weight: 0 },
   about: { size: 0.85, weight: 0.06 },
+  now: { size: 0.85, weight: 0.02 },
   projects: { size: 0.85, weight: 0 },
   reading: { size: 0.85, weight: -0.03 },
   languages: { size: 0.85, weight: 0.04 },
@@ -199,12 +210,21 @@ export const OBJECTS: Record<SectionId, DeskObjectPlacement> = {
     focus: new Vector3(-1.45, 0.12, 0.9),
     distance: 2.1,
   },
+  now: {
+    position: new Vector3(-2.55, CONTACT_GAP, -1.25),
+    focus: new Vector3(-2.55, 1.25, -1.25),
+    distance: 3.9,
+  },
   contact: {
-    position: new Vector3(-2.44, CONTACT_GAP, 0.62),
-    focus: new Vector3(-2.45, 0.2, 0.45),
-    distance: 2.5,
+    // Hung on the wall right of the window, apart from the desk objects.
+    position: new Vector3(2.75, 1.55, -1.73),
+    focus: new Vector3(2.75, 1.55, -1.73),
+    distance: 2.9,
   },
 }
+
+/** Quill and inkwell: decoration on the desk, not a section. */
+export const INKWELL_POSITION = new Vector3(-2.1, CONTACT_GAP, 0.35)
 
 /** Matches the bottom-sheet media query in index.css. */
 export function usesBottomSheet(width: number, height: number) {

@@ -209,6 +209,8 @@ dt {
 
 dd {
   margin: 0;
+  /* Long links, such as a LinkedIn URL, wrap instead of running out of the panel. */
+  overflow-wrap: anywhere;
 }
 
 .contact-row {
@@ -223,6 +225,21 @@ dd {
 
 .highlights li + li {
   margin-top: 0.4rem;
+}
+
+/* Now: one short line per thing, label above. */
+.now-list {
+  display: block;
+  margin-bottom: 1rem;
+}
+
+.now-row + .now-row {
+  margin-top: 0.9rem;
+}
+
+.now-list dd {
+  font-size: 1.0625rem;
+  line-height: 1.45;
 }
 
 /* Skills stack the label above its list, since the lists run long. */
