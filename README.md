@@ -46,11 +46,6 @@ One-time setup:
 1. The repository must be public, unless the account has GitHub Pro.
 2. In **Settings → Pages → Build and deployment**, set **Source** to **GitHub Actions**.
 
-The workflow asks GitHub where the site will live and builds for that path, so it works either way:
-
-- Keep this repository's name, and the site is at `https://luangia.github.io/LuanWebsite/`.
-- Rename the repository to `luangia.github.io`, and it is at `https://luangia.github.io/`.
-
 To check a sub-path build locally before pushing:
 
 ```bash
